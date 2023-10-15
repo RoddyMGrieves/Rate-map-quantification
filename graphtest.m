@@ -64,7 +64,7 @@
     funconfig.MAP_get_fields_and_cells                  = 0; % create fields and cells (spike data)
     funconfig.MAP_generate_maps                         = 0; % create firing rate maps and compare to original distribution 
     funconfig.MAP_add_ripley_k                          = 0; % add Ripley's k values (estimate field sizes)
-    funconfig.MAP_test_map                              = 1; % small function to run tests on rate_mapper
+    funconfig.MAP_test_map                              = 0; % small function to run tests on rate_mapper
     funconfig.MAP_fix_datamats                          = 0; % add map parameter matrix to datamat files
     funconfig.MAP_eg_cells                              = 0; % plot example cells from population
 
@@ -125,6 +125,7 @@
     config.nfields                                      = 512;
     config.npcells                                      = 32;
     config.nwalks                                       = 8;
+    config.biased_walk                                  = 0;        
     config.plot_fields                                  = 100;
     config.plot_cells                                   = 100;
    
