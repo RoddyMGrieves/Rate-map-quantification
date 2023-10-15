@@ -22,6 +22,7 @@
 %% ################################################################# %% FUNCTION BODY
         pp = 1;
         wlength = 64;       
+        wlength = 10
 %         [epoly,emat] = contENV(config.environs{pp},0);
 %         epoly = epoly .* 10;            
 %         epoly = epoly-mean( [ max(epoly,[],1);min(epoly,[],1) ] );    
@@ -50,7 +51,7 @@
                     push_point(120,60) = true;
                     pull_point = zeros(size(emat2),'logical');
                     pull_point(120,180) = true;                    
-                    [pox,poy,pot,wmap] = getWALK2('env_map',emat2,'walk_length',wlength,'step_dist',[64 128],'central_drag',512,'wall_drag',135,'jit',100,'smoo',128,'plot_params_dir',fname,'pull_point',pull_point,'push_point',push_point);
+                    [pox,poy,pot,wmap] = getWALK2('env_map',emat2,'walk_length',wlength,'step_dist',[64 128],'central_drag',512,'wall_drag',12,'jit',100,'smoo',128,'plot_params_dir',fname,'pull_point',pull_point,'push_point',push_point);
                 else
                     [pox,poy,pot,wmap] = getWALK2('env_map',emat2,'walk_length',wlength,'step_dist',[64 128],'central_drag',1024,'wall_drag',1024,'jit',100,'smoo',128,'plot_params_dir',fname);
                 end
