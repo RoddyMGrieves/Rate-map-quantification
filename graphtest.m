@@ -48,6 +48,16 @@
         [~,~,~] = mkdir(fig_dir);        
     end
     
+    %% overdispersion settings
+    close all;
+    scratch_space = 'C:\Users\F004KS7\OneDrive - Dartmouth College\Projects in prep\2019 Mapping project\associated data\outputs\overdispersion';
+    [~,~,~] = mkdir(scratch_space);
+    fig_dir = 'C:\Users\F004KS7\OneDrive - Dartmouth College\Projects in prep\2019 Mapping project\associated media\outputs\overdispersion';
+    fig_dir2 = 'C:\Users\F004KS7\OneDrive - Dartmouth College\Projects in prep\2019 Mapping project\main figures\overdispersion';
+    cd(scratch_space)
+
+
+
 %% overwrite settings
     overwrite_walks                                     = 0;
     overwrite_fields                                    = 0;    
@@ -61,8 +71,8 @@
 %% Functions to run
     funconfig = struct;
     funconfig.MAP_get_random_walks                      = 0; % create random walks (position data)
-    funconfig.MAP_get_fields_and_cells                  = 0; % create fields and cells (spike data)
-    funconfig.MAP_generate_maps                         = 0; % create firing rate maps and compare to original distribution 
+    funconfig.MAP_get_fields_and_cells                  = 1; % create fields and cells (spike data)
+    funconfig.MAP_generate_maps                         = 1; % create firing rate maps and compare to original distribution 
     funconfig.MAP_add_ripley_k                          = 0; % add Ripley's k values (estimate field sizes)
     funconfig.MAP_test_map                              = 0; % small function to run tests on rate_mapper
     funconfig.MAP_fix_datamats                          = 0; % add map parameter matrix to datamat files
@@ -82,6 +92,7 @@
     figfuns.general.MAP_fig_maps                        = 0; % show error maps, all methods
     figfuns.general.MAP_fig_v2_pareto                   = 0; % show pareto and regression results, all methods
     figfuns.general.MAP_fig_histogram_lit               = 0; % histogram literature review
+    figfuns.general.MAP_fig_overdispersion              = 0; % overdispersion analysis
 
     % histogram figures
     figfuns.histogram.MAP_fig_1_multi                   = {0,'histogram'}; % example maps, MISE, additional factors, Pareto fronts, regression outcomes
@@ -115,15 +126,14 @@
     figfuns.fyhn.MAP_fig_1_multi                        = {0,'fyhn'}; % example maps, MISE, additional factors, Pareto fronts, regression outcomes
     figfuns.fyhn.MAP_fig_ex_multi                       = {0,'fyhn'}; % example maps made using pareto-optimal and minimum error settings      
     figfuns.fyhn.MAP_fig_fyhn_time                      = 0; % smoothing time window, short vs long
-    
-    
+        
 %% general settings
     config                                              = struct;
     config.environs                                     = {'arena120cm'};
 %     config.trial_lengths                                = [4,16,64];      
-    config.append                                       = {''};    
+    config.append                                       = {'overdisperse0-4'};    
     config.nfields                                      = 512;
-    config.npcells                                      = 32;
+    config.npcells                                      = 128;
     config.nwalks                                       = 8;
     config.biased_walk                                  = 0;        
     config.plot_fields                                  = 100;
@@ -134,16 +144,18 @@
     config.field_dist                                   = [5.73,0.26]; % [alpha beta] gamma distribution from which to pull number of field values for cells    
     config.nfactor                                      = [0.3 0.07]; % [mean SD] value added to spike probability, increasing the mean increases the overall probability of spikes, increasing the SD increases the background noise spikes
     config.tfactor                                      = [0 0.02]; % [mean SD] value added to spike times to simulate prospective/retrospective firing
-%     config.covariance                                   = [4000; 8000; 16000]; % [mean] distribution from which to pull covariance values
+    config.covariance                                   = [4000; 8000; 16000]; % [mean] distribution from which to pull covariance values
+    config.overdisperse                                 = [1 1 0.4]; % include overdispersion when simulating spikes, time frequency of modulation, amplitude of modulation
     
 %% generation settings
 % trial length x field size parameter pairs
-    config.analysis_pairs = {4000,  [4 16 64];...
-                             8000,  [4 16 64];...
-                             16000, [4 16 64]}; % {field size, [durations]}
+    % config.analysis_pairs = {4000,  [4 16 64];...
+    %                          8000,  [4 16 64];...
+    %                          16000, [4 16 64]}; % {field size, [durations]}
 %     config.analysis_pairs = {4000,  64}; % {field size, [durations]}                         
 % % trial length x field size parameter pairs
-%     config.analysis_pairs = {16000, 16}; % {field size, [durations]}
+    % config.analysis_pairs = {16000, 16}; % {field size, [durations]}
+    config.analysis_pairs = {16000, 4}; % {field size, [durations]} - overdispersion setup    
 %     config.analysis_pairs = {16000,  [4 16 64]}; % {field size, [durations]}                         
         
 %% mapping settings
@@ -156,7 +168,7 @@
     mapset.steps                                        = 32; % the number of convolution size steps to use for kadaptive    
     mapset.kern                                         = 'biweight'; % kernel
     mapset.smethod                                      = 1; % smoothing method, 1 = before division, 2 = after, 3 = no smoothing
-    mapset.methods                                      = {'fyhn'};
+    mapset.methods                                      = {'ash'}; % histogram ash ksde kyadaptive kadaptive fyhn
 %     mapset.methods                                      = {'histogram'};    
     mapset.twindow                                      = 0.25; % time window (s) over which to estimate instantaneous firing for temporal methods
     
