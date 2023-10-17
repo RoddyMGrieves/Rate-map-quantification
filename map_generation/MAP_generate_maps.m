@@ -75,10 +75,10 @@
                     data_dir = [scratch_space '\' config.environs{ee} '_' method_now '_sigma' num2str(mean_ssnow) '_duration' num2str(trial_lengths_now(ww)) config.append{1} '_datamats.mat']; 
                     if ~exist(data_dir,'file') || overwrite_maps || append_maps
                         % load cell and field data
-                        fdir = [scratch_space '\' config.environs{ee} '_sigma' num2str(mean_ssnow) '_duration' num2str(wlength) '_fields.mat'];
+                        fdir = [scratch_space '\' config.environs{ee} '_sigma' num2str(mean_ssnow) '_duration' num2str(wlength) config.append{1} '_fields.mat'];
                         disp(sprintf('\t\t\t...loading fields: %s',fdir));            
                         load(fdir,'field_dat');  
-                        sdir = [scratch_space '\' config.environs{ee} '_sigma' num2str(mean_ssnow) '_duration' num2str(wlength) '_sdata.mat'];            
+                        sdir = [scratch_space '\' config.environs{ee} '_sigma' num2str(mean_ssnow) '_duration' num2str(wlength) config.append{1} '_sdata.mat'];            
                         disp(sprintf('\t\t\t...loading cells: %s',sdir));            
                         load(sdir,'sdata');   
                         break
@@ -349,13 +349,14 @@
                                 r2 = ratemap ./ sum(ratemap(:) , 'omitnan') ./ d; % normalize to unit integral (pdf)
                                 
                                 % calculate error estimates                                
-                                data_matrix_error(ss,bb,uu,1) = mean( (p2(:)-r2(:)).^2 , 'omitnan' ) .* d; % mean integrated squared error                                
-                                data_matrix_error(ss,bb,uu,3) = sum( sum( (p2 .* log(p2./r2)) , 'omitnan' ) , 'omitnan' ) .* d; % KL divergence      
+                                % data_matrix_error(ss,bb,uu,1) = mean( (p2(:)-r2(:)).^2 , 'omitnan' ) .* d; % mean integrated squared error                                
+                                % data_matrix_error(ss,bb,uu,3) = sum( sum( (p2 .* log(p2./r2)) , 'omitnan' ) , 'omitnan' ) .* d; % KL divergence      
 
                                 m2 = imresize(ratemap,size(m1),'nearest'); % resize to match 1mm probability map
                                 m2 = m2 ./ sum(m2(:),'omitnan') ./ 1; % normalize    
                                 data_matrix_error(ss,bb,uu,4) = mean( (m1(:)-m2(:)).^2 , 'omitnan' ) .* 1; % calculate error
-                                data_matrix_error(ss,bb,uu,2) = sum( sum( (m1-m2).^2 , 'omitnan' ) , 'omitnan' ) .* 1; % integrated squared errors       
+                                data_matrix_error(ss,bb,uu,3) = corr(m1(:),m2(:),'rows','pairwise','type','Pearson');
+                                data_matrix_error(ss,bb,uu,2) = pdist([m1(:)';m2(:)'],'cosine');     
 
                                 %%----%% For inspection only                                
                                     if 0
