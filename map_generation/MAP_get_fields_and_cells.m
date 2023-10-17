@@ -155,6 +155,26 @@
                     denom1 = 256; % denominator for spike lag, bigger = smaller lag, zero disables
                     Fr = ( pmap./max(pmap(:)) ) .* coeff1;                    
                     Vp = interp2(X1,Y1,Fr,pox,poy,'nearest',0); 
+
+                    if config.overdisperse(1) % if we want to include overdispersion
+                        % create a 1Hz sinusoid
+                        time_modulation = sin(2*pi*pot*config.overdisperse(2));
+                        time_modulation = (config.overdisperse(3).*time_modulation)+1;
+                        % Therefore, the values for the amplitude and the average duration of the input modulation 
+                        % that produce histograms like what was experimentally observed are around 10% and 1 s.
+                        % https://www.sciencedirect.com/science/article/pii/S0306452201005863
+
+                        Vp = Vp .* time_modulation; % modulate the firing by the 1Hz sinusoid
+
+                        % figure
+                        % cline(pox,poy,Vp)
+                        % daspect([1 1 1])
+                        % keyboard
+                        % figure
+                        % plot(pot,time_modulation)
+                    end
+
+
                     nout = normal_rand(128,256,0,inf,length(pox)) ./ denom1;
                     idx = 1:length(Vp);
                     idx2 = idx(:) + round(nout);
