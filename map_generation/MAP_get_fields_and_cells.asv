@@ -158,14 +158,16 @@
 
                     if config.overdisperse(1) % if we want to include overdispersion
                         % create a 1Hz sinusoid
-                        f = 1/(config.overdisperse(2).*2);
+                        f = 1/config.overdisperse(2);
                         t = pot;
                         time_modulation = sin(2*pi*f*t);
-                        time_modulation(time_modulation>0) = 1;
-                        time_modulation(time_modulation<0) = -1;
-                        time_modulation = (config.overdisperse(3).*time_modulation)+1;
 
-                        % time_modulation = (config.overdisperse(3).*time_modulation)+1;
+
+
+
+
+                        
+                        time_modulation = (config.overdisperse(3).*time_modulation)+1;
                         % Therefore, the values for the amplitude and the average duration of the input modulation 
                         % that produce histograms like what was experimentally observed are around 10% and 1 s.
                         % https://www.sciencedirect.com/science/article/pii/S0306452201005863
@@ -178,7 +180,6 @@
                         % keyboard
                         % figure
                         % plot(pot,time_modulation)
-                        % keyboard
                     else
                         time_modulation = ones(size(pot));
                     end
@@ -201,24 +202,24 @@
                     spy = poy(ind2,:);                 
                     spt = pot(ind2,:);        
 
-% figure
-% ax1 = subplot(1,2,1);
-% t = 5*60;
-% cline(pox(pot<t),poy(pot<t),Vp2(pot<t))
-% daspect([1 1 1])
-% 
-% ax2 = subplot(1,2,2);
-% plot(pox(pot<t),poy(pot<t),'k'); hold on;
-% plot(spx(spt<t),spy(spt<t),'r.','MarkerSize',20)
-% daspect([1 1 1])
-% 
-% linkaxes([ax1 ax2],'xy')
-% 
-% figure
-% plot(pot,Vp2);
-% hold on
-% plot(spt,zeros(size(spt)),'ro')
-% keyboard
+figure
+ax1 = subplot(1,2,1);
+t = 5*60;
+cline(pox(pot<t),poy(pot<t),Vp2(pot<t))
+daspect([1 1 1])
+
+ax2 = subplot(1,2,2);
+plot(pox(pot<t),poy(pot<t),'k'); hold on;
+plot(spx(spt<t),spy(spt<t),'r.','MarkerSize',20)
+daspect([1 1 1])
+
+linkaxes([ax1 ax2],'xy')
+
+figure
+plot(pot,Vp2);
+hold on
+plot(spt,zeros(size(spt)),'ro')
+keyboard
 
                     % downsample to get desired firing rate
                     num = round( normal_rand(config.frate(1),config.frate(2),config.frate(3),config.frate(4),1) * duration );
