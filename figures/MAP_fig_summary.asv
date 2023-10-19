@@ -145,6 +145,7 @@
         ax.YScale = 'log'; 
         ax.YLim(1) = 10^-13;
         ylabel(sprintf('MISE'))  
+        text(0.99,1.1,'N = 256 cells','Units','normalized','HorizontalAlignment','right','VerticalAlignment','top')
 
         for ii = 1:length(mnames)
             text(ii,ax.YLim(1),sprintf(dnames{ii}),'VerticalAlignment','top','HorizontalAlignment','center','FontSize',8)
@@ -153,23 +154,21 @@
         axis manual
         p1 = plot(-10,1,'ko','LineWidth',1.5);
         p2 = plot(-10,1,'kv','LineWidth',1.5);
-        [~,leg] = legendflex([p1 p2],{'Balanced solution','Minimum error solution'},'anchor',{'sw','sw'},'ncol',1,'box','off','buffer',[0,-70],'xscale',.5,'fontsize',9); 
-        text(0.99,0.85,'N = 256 cells','Units','normalized','HorizontalAlignment','right','VerticalAlignment','top')
+        [~,leg] = legendflex([p1 p2],{'Balanced solution','Minimum error solution'},'anchor',{'nw','nw'},'ncol',1,'box','off','buffer',[0,20],'xscale',.5,'fontsize',9); 
+        
 
-    ax_sig = axes('Units','pixels','Position',ax1.Position+[-10 140 0 -130],'Color','none'); 
-        ax = gca;
-        ax.XLim = ax1.XLim;
-        axis off
-        % [p,a,sts] = anova1(ds1,gs,'off');
-        % c = multcompare(sts,'Display','off');
-        % keyboard        
-        [result1,result2] = plotsigbrackets(ds1,gs,'bracket_text_fsize',0);
+[p,a,sts] = anova1(ds1,gs,'off');
+c = multcompare(sts,'Display','off');
+
+keyboard
+
+
 
 %% #################### computation time
     xnow = xnow+400;
     sep = 10;
-    ax1 = axes('Units','pixels','Position',[xnow ynow-20 300 160-sep],'Color','none','Clipping','off'); 
-        ah = add_panel_title('b',sprintf('Computation time across mapping methods'),'yoffset',35,'xoffset',-30,'width',300);                    
+    ax1 = axes('Units','pixels','Position',[xnow ynow+sep 300 170-sep],'Color','none','Clipping','off'); 
+        ah = add_panel_title('b',sprintf('Computation time across mapping methods'),'yoffset',0,'xoffset',-30,'width',300);                    
     
         [g,~] = meshgrid(1:size(time_vals,2),1:size(time_vals,1));
         gs = g(:);
@@ -189,13 +188,14 @@
 
         ax = gca;
         ax.XLim = [.5 length(mnames)+.5];
+        % ax.YLim(1) = 0;        
         ax.XTick = [];
         % ax.YTick = (ones(1,10).*10).^[1:10];
         ax.XTickLabel = [];
         ax.XColor = 'none';
         ax.YScale = 'log'; 
         ylabel(sprintf('Computation time (ms)'))  
-        text(0.99,0.1,'N = 256 cells','Units','normalized','HorizontalAlignment','right','VerticalAlignment','top')
+        text(0.99,1.1,'N = 256 cells','Units','normalized','HorizontalAlignment','right','VerticalAlignment','top')
 
     ax2 = axes('Units','pixels','Position',ax1.Position-[0 sep 0 0],'Color','none'); 
         ax2.YColor = 'none';
@@ -212,19 +212,10 @@
             text(ii,ax.YLim(1),sprintf(dnames{ii}),'VerticalAlignment','top','HorizontalAlignment','center','FontSize',8)
         end
 
-    ax_sig = axes('Units','pixels','Position',ax1.Position+[-10 150 0 -100],'Color','none'); 
-        ax = gca;
-        ax.XLim = ax1.XLim;
-        axis off
-        % [p,a,sts] = anova1(ds1,gs,'off');
-        % c = multcompare(sts,'Display','off');
-        % keyboard
-        [result1,result2] = plotsigbrackets(ds1,gs,'bracket_text_fsize',0);
-
 
 %% #################### field error
     xnow = 80;
-    ynow = ynow-290;
+    ynow = ynow-250;
     ax1 = axes('Units','pixels','Position',[xnow ynow 300 170],'Color','none','Clipping','off'); 
         ah = add_panel_title('c',sprintf('Place field accuracy across mapping methods'),'yoffset',0,'xoffset',-30,'width',300);                    
 
@@ -255,8 +246,8 @@
 
 %% #################### empty bins
     xnow = xnow+400;
-    ax1 = axes('Units','pixels','Position',[xnow ynow-35 300 170-sep],'Color','none','Clipping','off'); 
-        ah = add_panel_title('d',sprintf('Empty bins across mapping methods'),'yoffset',45,'xoffset',-30,'width',300);                    
+    ax1 = axes('Units','pixels','Position',[xnow ynow+sep 300 170-sep],'Color','none','Clipping','off'); 
+        ah = add_panel_title('d',sprintf('Empty bins across mapping methods'),'yoffset',0,'xoffset',-30,'width',300);                    
     
         [g,~] = meshgrid(1:size(m_vals,2),1:size(m_vals,1));
         gs = g(:);
@@ -295,23 +286,13 @@
             text(ii,ax.YLim(1),sprintf(dnames{ii}),'VerticalAlignment','top','HorizontalAlignment','center','FontSize',8)
         end
 
-
-    ax_sig = axes('Units','pixels','Position',ax1.Position+[-10 175 0 -120],'Color','none'); 
-        ax = gca;
-        ax.XLim = ax1.XLim;
-        axis off
-        % [p,a,sts] = anova1(ds1,gs,'off');
-        % c = multcompare(sts,'Display','off');
-        % keyboard
-        [result1,result2] = plotsigbrackets(ds1,gs,'bracket_text_fsize',0);
-
 %% #################### Heatmap of error by binsize and smoothing
     dnames = {'tKSDE','Histogram','ASH','Adaptive smoothing','KSDE','Adaptive binning'};        
     excell = 140;
     excell = 20;
 
     xnow = 50;
-    ynow = ynow-220;
+    ynow = ynow-210;
     siz = 110; 
     spac = 10;
     xvec = xnow : siz+spac : 1000;
@@ -360,16 +341,12 @@
     spk = [pspx pspy]; % spikes in mm
 
     ax1 = axes('Units','pixels','Position',[xvec(2)+30 yvec(1) siz siz],'Color','none','Clipping','off');         
-        p1 = plot(ppox,ppoy,'Color',[.5 .5 .5 .5]); hold on;
-        s1 = scatter(pspx,pspy,5,'r','filled','MarkerEdgeColor','none','MarkerFaceAlpha',0.5);
+        plot(ppox,ppoy,'Color',[.5 .5 .5 .5]); hold on;
+        scatter(pspx,pspy,5,'r','filled','MarkerEdgeColor','none','MarkerFaceAlpha',0.5);
         daspect([1 1 1])
         axis xy off  
 
         text(0,1.05,sprintf('Positions and spikes'),'HorizontalAl','left','Units','normalized','FontSize',8,'rotation',0,'Color','k','VerticalAl','bottom')  
-
-        [~,leg] = legendflex([p1 s1]...
-            ,{'trajectory','spikes'}...
-            ,'anchor',{'e','e'},'ncol',1,'box','off','buffer',[100,0],'xscale',1,'fontsize',9); 
 
     ynow = ynow-150;
     yvec = ones(size(xvec))*ynow;

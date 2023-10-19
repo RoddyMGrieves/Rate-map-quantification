@@ -143,7 +143,7 @@
         plot([Xq(exbin) Xq(exbin)+r],[Yq(exbin) Yq(exbin)],'Color','k')
         text(Xq(exbin)+r+1,Yq(exbin),sprintf('%.f mm',rmset.radmap(exbin)),'HorizontalAl','left','FontSize',8)
        
-        idx2 = find(Xq(:)==22 & Yq(:)==18,1);        
+        idx2 = find(Xq(:)==30 & Yq(:)==16,1);        
         exbin2 = idx2;
         r2 = rmset.radmap(exbin2)/rmset.binsize; % radius in bins
         scatter(Xq(exbin2),Yq(exbin2),8,'b','filled','MarkerEdgeColor','none','MarkerFaceAlpha',1); hold on;
@@ -152,7 +152,7 @@
         text(Xq(exbin2)+r2+1,Yq(exbin2),sprintf('%.f mm',rmset.radmap(exbin2)),'HorizontalAl','left','FontSize',8)
 
         text(0.01,-0.15,sprintf('Expand until:\nradius {\\geq} %c / (n {\\times} {\\surd}s)',945),'HorizontalAl','left','FontSize',10,'Units','normalized')
-
+keyboard
     % distance map
     ax10 = axes('Units','pixels','Position',[ax6.Position(1)+ax6.Position(3)+vbuff+10 ax6.Position(2) ax6.Position(3) ax6.Position(4)]); 
         radmap = rmset.radmap;

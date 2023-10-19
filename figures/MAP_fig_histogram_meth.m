@@ -36,7 +36,7 @@
     end
     
     % if ~exist('sdata','var')
-        sdir = [scratch_space '\' config.environs{1} '_sigma16000_duration64_sdata.mat'];            
+        sdir = [scratch_space '\' config.environs{1} '_sigma8000_duration64_sdata.mat'];            
         disp(sprintf('\t\t...loading %s',sdir));            
         load(sdir,'sdata'); 
     % end
@@ -62,7 +62,7 @@
 %% #################### Spikes and trajectory
     xnow = 50;
     ynow = 500;
-    excell = 4;
+    excell = 12;
     ax1 = axes('Units','pixels','Position',[150 ynow 200 200]);    
         %ah = add_panel_title('a',sprintf('Random walk & simulated spikes'),'yoffset',5,'xoffset',0,'width',400);  
 
