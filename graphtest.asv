@@ -28,16 +28,16 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% ################################################################# %% INPUT ARGUMENTS CHECK
 % deal with initial variables
-    close all;
+    % close all;
     scratch_space = 'C:\Users\F004KS7\OneDrive - Dartmouth College\Projects in prep\2019 Mapping project\associated data\outputs'; % desk computer + bonsai computer
     [~,~,~] = mkdir(scratch_space);
     fig_dir = 'C:\Users\F004KS7\OneDrive - Dartmouth College\Projects in prep\2019 Mapping project\associated media\outputs'; % desk computer + bonsai computer
     fig_dir2 = 'C:\Users\F004KS7\OneDrive - Dartmouth College\Projects in prep\2019 Mapping project\main figures'; % desk computer + bonsai computer
     
-    % scratch_space = 'C:\Users\roddy\OneDrive - Dartmouth College\Projects in prep\2019 Mapping project\associated data\outputs'; % desk computer + bonsai computer
-    % [~,~,~] = mkdir(scratch_space);
-    % fig_dir = 'C:\Users\roddy\OneDrive - Dartmouth College\Projects in prep\2019 Mapping project\associated media\outputs'; % desk computer + bonsai computer
-    % fig_dir2 = 'C:\Users\roddy\OneDrive - Dartmouth College\Projects in prep\2019 Mapping project\main figures'; % desk computer + bonsai computer
+%     scratch_space = 'C:\Users\roddy\OneDrive - Dartmouth College\Projects in prep\2019 Mapping project\associated data\outputs'; % desk computer + bonsai computer
+%     [~,~,~] = mkdir(scratch_space);
+%     fig_dir = 'C:\Users\roddy\OneDrive - Dartmouth College\Projects in prep\2019 Mapping project\associated media\outputs'; % desk computer + bonsai computer
+%     fig_dir2 = 'C:\Users\roddy\OneDrive - Dartmouth College\Projects in prep\2019 Mapping project\main figures'; % desk computer + bonsai computer
 
     try
         cd(scratch_space)
@@ -48,21 +48,21 @@
         [~,~,~] = mkdir(fig_dir);        
     end
     
-    % %% overdispersion settings
-    % % close all;
-    % scratch_space = 'C:\Users\F004KS7\OneDrive - Dartmouth College\Projects in prep\2019 Mapping project\associated data\outputs\overdispersion';
-    % [~,~,~] = mkdir(scratch_space);
-    % fig_dir = 'C:\Users\F004KS7\OneDrive - Dartmouth College\Projects in prep\2019 Mapping project\associated media\outputs\overdispersion';
-    % fig_dir2 = 'C:\Users\F004KS7\OneDrive - Dartmouth College\Projects in prep\2019 Mapping project\main figures\overdispersion';
-    % cd(scratch_space)
+    %% overdispersion settings
+    % close all;
+    scratch_space = 'C:\Users\F004KS7\OneDrive - Dartmouth College\Projects in prep\2019 Mapping project\associated data\outputs\overdispersion';
+    [~,~,~] = mkdir(scratch_space);
+    fig_dir = 'C:\Users\F004KS7\OneDrive - Dartmouth College\Projects in prep\2019 Mapping project\associated media\outputs\overdispersion';
+    fig_dir2 = 'C:\Users\F004KS7\OneDrive - Dartmouth College\Projects in prep\2019 Mapping project\main figures\overdispersion';
+    cd(scratch_space)
 
 
 
 %% overwrite settings
     overwrite_walks                                     = 0;
-    overwrite_fields                                    = 0;    
-    overwrite_cells                                     = 0;
-    overwrite_maps                                      = 0;    
+    overwrite_fields                                    = 1;    
+    overwrite_cells                                     = 1;
+    overwrite_maps                                      = 1;    
     append_maps                                         = 0;   
     print_now                                           = 1;
     print_qual                                          = '-r250';
@@ -71,8 +71,8 @@
 %% Functions to run
     funconfig = struct;
     funconfig.MAP_get_random_walks                      = 0; % create random walks (position data)
-    funconfig.MAP_get_fields_and_cells                  = 0; % create fields and cells (spike data)
-    funconfig.MAP_generate_maps                         = 0; % create firing rate maps and compare to original distribution 
+    funconfig.MAP_get_fields_and_cells                  = 1; % create fields and cells (spike data)
+    funconfig.MAP_generate_maps                         = 1; % create firing rate maps and compare to original distribution 
     funconfig.MAP_add_ripley_k                          = 0; % add Ripley's k values (estimate field sizes)
     funconfig.MAP_test_map                              = 0; % small function to run tests on rate_mapper
     funconfig.MAP_fix_datamats                          = 0; % add map parameter matrix to datamat files
@@ -88,11 +88,11 @@
     % summary figures
     figfuns.general.MAP_fig_errors                      = 0; % show MISE, all methods
     figfuns.general.MAP_fig_time_etc                    = 0; %    
-    figfuns.general.MAP_fig_summary                     = 1; % compare different methods
+    figfuns.general.MAP_fig_summary                     = 0; % compare different methods
     figfuns.general.MAP_fig_maps                        = 0; % show error maps, all methods
     figfuns.general.MAP_fig_v2_pareto                   = 0; % show pareto and regression results, all methods
     figfuns.general.MAP_fig_histogram_lit               = 0; % histogram literature review
-    figfuns.general.MAP_fig_overdispersion              = 0; % overdispersion analysis
+    figfuns.general.MAP_fig_overdispersion              = 1; % overdispersion analysis
 
     % histogram figures
     figfuns.histogram.MAP_fig_1_multi                   = {0,'histogram'}; % example maps, MISE, additional factors, Pareto fronts, regression outcomes
@@ -131,9 +131,9 @@
     config                                              = struct;
     config.environs                                     = {'arena120cm'};
 %     config.trial_lengths                                = [4,16,64];      
-    config.append                                       = {'overdisperse0-0'};    
-    config.nfields                                      = 512; % 512
-    config.npcells                                      = 64; % 256
+    config.append                                       = {'overdisperse0-9'};    
+    config.nfields                                      = 512;
+    config.npcells                                      = 64;
     config.nwalks                                       = 8;
     config.biased_walk                                  = 0;        
     config.plot_fields                                  = 100;
@@ -145,7 +145,7 @@
     config.nfactor                                      = [0.3 0.07]; % [mean SD] value added to spike probability, increasing the mean increases the overall probability of spikes, increasing the SD increases the background noise spikes
     config.tfactor                                      = [0 0.02]; % [mean SD] value added to spike times to simulate prospective/retrospective firing
     config.covariance                                   = [4000; 8000; 16000]; % [mean] distribution from which to pull covariance values
-    config.overdisperse                                 = [0 1.5 0.8]; % include overdispersion when simulating spikes, time interval of modulation (i.e. time spent in 'on' periods), amplitude of modulation
+    config.overdisperse                                 = [1 2 0.9]; % include overdispersion when simulating spikes, time interval of modulation, amplitude of modulation
     
 %% generation settings
 % trial length x field size parameter pairs
@@ -168,7 +168,7 @@
     mapset.steps                                        = 32; % the number of convolution size steps to use for kadaptive    
     mapset.kern                                         = 'biweight'; % kernel
     mapset.smethod                                      = 1; % smoothing method, 1 = before division, 2 = after, 3 = no smoothing
-    mapset.methods                                      = {'ksde','kyadaptive','kadaptive','fyhn'}; % histogram ash ksde kyadaptive kadaptive fyhn
+    mapset.methods                                      = {'ash'}; % histogram ash ksde kyadaptive kadaptive fyhn
 %     mapset.methods                                      = {'histogram'};    
     mapset.twindow                                      = 0.25; % time window (s) over which to estimate instantaneous firing for temporal methods
     
