@@ -45,6 +45,174 @@
 %% ##################################### Heading 2
 %% #################### Heading 3
 %% Heading 4
+ovals = {'overdisperse0-0','overdisperse0-8'};
+dispersion = [0 0.8];
+
+if 0
+%% #################### Example fields
+
+            sdir = [scratch_space '\' ename '_sigma16000_duration64' ovals{3} '_sdata.mat'];            
+            disp(sprintf('\t\t...loading %s',sdir));            
+            load(sdir,'sdata'); 
+
+            % cut the position and spike data to the trial length
+            % we want
+            excell = 5;
+            pindx = sdata.pos_index(excell);
+            pos_now = all_pos{pindx,1};
+            pox = pos_now(:,1);
+            poy = pos_now(:,2);
+            pot = pos_now(:,3); 
+
+            spk = sdata.spk{excell};
+            spx = spk(:,1);
+            spy = spk(:,2);
+            spt = spk(:,3);
+
+            tcut = 64*60;
+            ppox = pox(pot<tcut);
+            ppoy = poy(pot<tcut);
+            ppot = pot(pot<tcut);            
+            pspx = spx(spt<tcut);
+            pspy = spy(spt<tcut);
+            pspt = spt(spt<tcut);            
+            pos = [ppox ppoy]; % positions in mm
+            spk = [pspx pspy]; % spikes in mm
+
+            rmset = mapset; % rate mapper settings structure - passing mapset directly to ratemapper causes a memory leak
+            rmset.method = 'histogram';
+            rmset.binsize = 20;
+            rmset.ssigma = 40;
+            rmset.maplims = [-max(abs(epoly(:,1))) -max(abs(epoly(:,2))) max(abs(epoly(:,1))) max(abs(epoly(:,2)))]; 
+            rmset.pot = ppot;
+            rmset.spt = pspt;
+            [ratemap,dwellmap,spikemap,rmset,speedlift] = rate_mapper(pos,spk,rmset);
+
+            [z,overdispersion,r] = getOVERDISPERSE(rmset.map_pos,ppot,pspt,ratemap);
+
+figure
+xi = -10:0.5:10;
+% f = ksdensity(z,xi,'bandwidth',1,'kernel','normal');
+% area(xi,f,'FaceColor','k','FaceAlpha',0.2,'EdgeColor','none'); 
+f = histcounts(z(:),xi,'Normalization','probability');
+x = movmean(xi,2,'EndPoints','discard');
+bar(x,f,1,'k');
+hold on;
+
+xi = -10:0.1:10;
+y = normpdf(-10:0.1:10,0,1);
+y = y ./ nanmax(y(:)) .* nanmax(f(:));
+plot(xi,y,'r'); 
+
+% return
+
+
+
+            % keyboard
+    poxmap = rmset.map_pos(:,1);
+    poymap = rmset.map_pos(:,2);
+    inds = sub2ind(size(ratemap),round(poymap),round(poxmap));
+    exp_frate = ratemap(inds);
+
+    log_field = exp_frate > (max(ratemap(:)).*0.2);
+    n_pass = bwlabel(log_field);
+
+    dv = 50;
+    m = NaN(max(n_pass),dv);
+
+    inst_spikes = histcounts(spt,min(ppot(:))-0.01:0.02:max(ppot(:))+0.01);
+    z = NaN(max(n_pass),1);
+    v = NaN(max(n_pass),2);
+    for pp = 1:max(n_pass)
+        Nobs = sum(inst_spikes(n_pass==pp));
+        Nexp = sum(exp_frate(n_pass==pp).*(1/50));
+        z(pp) = (Nobs-Nexp)/sqrt(Nexp);
+        v(pp,:) = [Nobs Nexp];
+
+        i = inst_spikes(n_pass==pp);
+        if length(i)>dv
+            m(pp,:) = i(1:dv);
+        else
+            m(pp,1:length(i)) = i;
+
+        end
+    end
+
+
+figure
+xi = -10:0.5:10;
+% f = ksdensity(z,xi,'bandwidth',1,'kernel','normal');
+% area(xi,f,'FaceColor','k','FaceAlpha',0.2,'EdgeColor','none'); 
+f = histcounts(z(:),xi,'Normalization','probability');
+x = movmean(xi,2,'EndPoints','discard');
+bar(x,f,1,'k');
+hold on;
+
+xi = -10:0.1:10;
+y = normpdf(-10:0.1:10,0,1);
+y = y ./ nanmax(y(:)) .* nanmax(f(:));
+plot(xi,y,'r'); 
+
+% return
+% figure
+% imagesc(m)
+% 
+% 
+% keyboard
+
+
+figure
+subplot(2,2,1)
+plot(ppox,ppoy,'k'); hold on;
+plot(pspx,pspy,'r.','MarkerSize',20);
+daspect([1 1 1])
+
+subplot(2,2,2)
+imagesc(ratemap)
+daspect([1 1 1])
+axis xy
+
+
+return
+subplot(2,2,3)
+xi = -10:0.5:10;
+% f = ksdensity(z,xi,'bandwidth',1,'kernel','normal');
+% area(xi,f,'FaceColor','k','FaceAlpha',0.2,'EdgeColor','none'); 
+f = histcounts(z(:),xi,'Normalization','probability');
+x = movmean(xi,2,'EndPoints','discard');
+bar(x,f,1,'k');
+hold on;
+
+xi = -10:0.1:10;
+y = normpdf(-10:0.1:10,0,1);
+y = y ./ nanmax(y(:)) .* nanmax(f(:));
+plot(xi,y,'r'); 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+return
+end
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% ################################################################# %% FUNCTION BODY
 %% #################### Heatmap of error by binsize and smoothing
@@ -58,20 +226,20 @@
     xnow = 70;
     ynow = 600;
     mnames = {'histogram','ash','kadaptive','ksde','fyhn','kyadaptive'};
-mnames = {'histogram'}
+mnames = {'histogram','ash'}
     
     dnames = {'Histogram','ASH','Adaptive smoothing','KSDE','tKSDE','Adaptive binning'}; 
     ls = {'a','b','c','d','e','f','g'};
     mapidx = 4;
     xsiz = 150;
-    xbuff = 160;
+    xbuff = 50;
     xvec = xnow : (xsiz+xbuff) : 1000;
     ysiz = 150;
-    ybuff = 100;
+    ybuff = 70;
     yvec = ynow : -(ysiz+ybuff) : 0;
     [xx,yy] = meshgrid(xvec,yvec);
     xx = xx';
-    yy = yy';
+    yy = yy;
 
     % plot settings
     n_color_levels = 64;
@@ -79,7 +247,6 @@ mnames = {'histogram'}
     clims = [1*10^-12 1*10^-11];   
     interp_method = 'nearest';  
   
-    ovals = {'overdisperse0-0','overdisperse0-1','overdisperse0-4','overdisperse0-8'};
     for mm = 1:length(mnames) % for every method
         disp(sprintf('\t%s...',mnames{mm}))
         
@@ -287,10 +454,6 @@ mnames = {'histogram'}
     colormap(jet(256)); % to make sure the colormap is not the horrible default one
     mapidx = 4;
 
-    mnames = {'fyhn','histogram','ash','kadaptive','ksde','kyadaptive'};
-    dnames = {'tKSDE','Histogram','ASH','Adaptive\nsmoothing','KSDE','Adaptive\nbinning'};
-mnames = {'histogram'}
-dnames = {'Histogram'};
     sigma_now = '16000';
     time_now = '4';   
     err_vals = NaN(config.npcells,length(mnames),2,length(ovals));
@@ -348,7 +511,6 @@ dnames = {'Histogram'};
    
         % plot results
         cols = winter(length(mnames));
-        dispersion = [0 0.1 0.4 0.8];
         means = NaN(length(mnames),length(ovals)); % means
         sems = NaN(length(mnames),length(ovals)); % SEMs
         for mm = 1:length(mnames) % for every mapping method
@@ -356,7 +518,7 @@ dnames = {'Histogram'};
             means(mm,:) = mean(enow,1,'omitnan');
             sems(mm,:) = nansem(enow,1);
 
-            errorbar(dispersion,means(mm,:),sems(mm,:),'Color',cols(mm,:),'Marker','o');
+            errorbar(dispersion,means(mm,:),sems(mm,:),'Color',cols(mm,:),'Marker','o'); hold on;
         end
 
         ax = gca;
@@ -382,73 +544,23 @@ dnames = {'Histogram'};
         vals = NaN(length(mnames),length(ovals)); % 
         for mm = 1:length(mnames) % for every mapping method
             enow = squeeze(p_vals(:,mm,1,:)); % balanced
-            vals = sum(enow==0,1,'omitnan') ./ size(enow,1);
+            vals(mm,:) = sum(enow==0,1,'omitnan') ./ size(enow,1);
 
-            plot(dispersion,vals(mm,:),'Color',cols(mm,:),'Marker','o');
+            plot(dispersion,vals(mm,:),'Color',cols(mm,:),'Marker','o'); hold on;
         end
 
         ax = gca;
         ax.XLim = [0 1];
+        ax.XTick = dispersion;
         ax.YLim = [0.8 1]; 
-        ax.XTick = [];
         ylabel(sprintf('Prop. correct place field count'))  
+        xlabel('Dispersion (a_{mod})')        
         text(0.99,1.1,'N = 256 cells','Units','normalized','HorizontalAlignment','right','VerticalAlignment','top')
         box off
 
-%% #################### Example fields
-
-            sdir = [scratch_space '\' ename '_sigma16000_duration64' ovals{1} '_sdata.mat'];            
-            disp(sprintf('\t\t...loading %s',sdir));            
-            load(sdir,'sdata'); 
-
-            % cut the position and spike data to the trial length
-            % we want
-            excell = 1;
-            pindx = sdata.pos_index(excell);
-            pos_now = all_pos{pindx,1};
-            pox = pos_now(:,1);
-            poy = pos_now(:,2);
-            pot = pos_now(:,3); 
-
-            spk = sdata.spk{excell};
-            spx = spk(:,1);
-            spy = spk(:,2);
-            spt = spk(:,3);
-
-            tcut = 16*60;
-            ppox = pox(pot<tcut);
-            ppoy = poy(pot<tcut);
-            ppot = pot(pot<tcut);            
-            pspx = spx(spt<tcut);
-            pspy = spy(spt<tcut);
-            pspt = spt(spt<tcut);            
-            pos = [ppox ppoy]; % positions in mm
-            spk = [pspx pspy]; % spikes in mm
-
-            rmset = mapset; % rate mapper settings structure - passing mapset directly to ratemapper causes a memory leak
-            rmset.method = 'histogram';
-            rmset.binsize = 20;
-            rmset.ssigma = 40;
-            rmset.maplims = [-max(abs(epoly(:,1))) -max(abs(epoly(:,2))) max(abs(epoly(:,1))) max(abs(epoly(:,2)))]; 
-            rmset.pot = ppot;
-            rmset.spt = pspt;
-            [ratemap,dwellmap,spikemap,rmset,speedlift] = rate_mapper(pos,spk,rmset);
-
-            [z,overdispersion,r] = getOVERDISPERSE(rmset.map_pos,ppot,pspt,ratemap);
 
 
-
-
-
-
-
-
-
-
-
-
-
-keyboard
+% keyboard
 
 
         % 
