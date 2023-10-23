@@ -32,27 +32,25 @@
             
         nwalks = config.nwalks;
         for ww = 1:nwalks
-            if config.biased_walk
-                wdir = [scratch_space '\' config.environs{pp} '_' num2str(wlength) '_walk' num2str(ww) '_biased.mat'];            
-            else
-                wdir = [scratch_space '\' config.environs{pp} '_' num2str(wlength) '_walk' num2str(ww) '.mat'];
-            end
+            wdir = [scratch_space '\' config.environs{pp} '_' num2str(wlength) '_walk' num2str(ww) config.append{1} '.mat'];
             
             if ~exist(wdir,'file') || overwrite_walks
-                fname = [fig_dir '\' config.environs{pp} '_' num2str(wlength) '_plot_params' num2str(ww) '.png'];
+                fname = [fig_dir '\' config.environs{pp} '_' num2str(wlength) '_plot_params' num2str(ww) config.append{1} '.png'];
 
                 % prepare environment matrix for walk function
                 emat2 = imresize(emat,2);       
                 b = bwdist(~emat2);
                 emat2(b<10) = false;   
-                if config.biased_walk
+                if config.biased_walk==1 % biased to a point
                     push_point = zeros(size(emat2),'logical');
                     push_point(120,60) = true;
                     pull_point = zeros(size(emat2),'logical');
                     pull_point(120,180) = true;                    
-                    [pox,poy,pot,wmap] = getWALK2('env_map',emat2,'walk_length',wlength,'step_dist',[64 128],'central_drag',512,'wall_drag',135,'jit',100,'smoo',128,'plot_params_dir',fname,'pull_point',pull_point,'push_point',push_point);
+                    [pox,poy,pot,wmap] = getWALK2('env_map',emat2,'walk_length',wlength,'step_dist',[64 128],'central_drag',512,'wall_drag',512,'jit',100,'smoo',128,'plot_params_dir',fname,'pull_point',pull_point,'push_point',push_point);
+                elseif config.biased_walk==2 % thigmotaxis
+                    [pox,poy,pot,wmap] = getWALK2('env_map',emat2,'walk_length',wlength,'step_dist',[64 128],'central_drag',0,'wall_drag',100,'jit',100,'smoo',128,'plot_params_dir',fname);
                 else
-                    [pox,poy,pot,wmap] = getWALK2('env_map',emat2,'walk_length',wlength,'step_dist',[64 128],'central_drag',1024,'wall_drag',1024,'jit',100,'smoo',128,'plot_params_dir',fname);
+                    [pox,poy,pot,wmap] = getWALK2('env_map',emat2,'walk_length',wlength,'step_dist',[64 128],'central_drag',512,'wall_drag',512,'jit',100,'smoo',128,'plot_params_dir',fname);
                 end
                 pox = (pox ./ 2); % position data are in mm
                 poy = (poy ./ 2);  
@@ -60,7 +58,7 @@
                 disp(sprintf('\t\t...saving %s',wdir));
                 save(wdir,'pox','poy','pot','wmap','epoly','emat','wlength','-v7.3'); % save walk data     
 
-                if 1
+                if 0
                     figure
                     subplot(3,3,1)
                     plot(epoly(:,1),epoly(:,2),'r'); hold on;
@@ -84,7 +82,7 @@
                     plot(epoly(:,1),epoly(:,2),'r'); hold on;                    
                     plot(pox(tindx),poy(tindx),'k');
                     daspect([1 1 1])               
-                    return
+                    keyboard
 
                 end
             else
