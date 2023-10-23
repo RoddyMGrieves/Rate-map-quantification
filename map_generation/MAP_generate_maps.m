@@ -39,7 +39,7 @@
         all_pos = cell(nwalks,1);
         for ww = 1:nwalks
             wlength = 64;
-            wdir = [scratch_space '\' config.environs{ee} '_' num2str(wlength) '_walk' num2str(ww) '.mat'];
+            wdir = [scratch_space '\' config.environs{ee} '_' num2str(wlength) '_walk' num2str(ww) config.append{1} '.mat'];
             load(wdir,'pox','poy','pot','epoly','emat','wlength'); % load walk data, positions are in mm      
 
             pox = fillmissing(pox(:),'linear');
@@ -354,9 +354,15 @@
 
                                 m2 = imresize(ratemap,size(m1),'nearest'); % resize to match 1mm probability map
                                 m2 = m2 ./ sum(m2(:),'omitnan') ./ 1; % normalize    
-                                data_matrix_error(ss,bb,uu,4) = mean( (m1(:)-m2(:)).^2 , 'omitnan' ) .* 1; % calculate error
-                                data_matrix_error(ss,bb,uu,3) = corr(m1(:),m2(:),'rows','pairwise','type','Pearson');
-                                data_matrix_error(ss,bb,uu,2) = pdist([m1(:)';m2(:)'],'cosine');     
+                                data_matrix_error(ss,bb,uu,4) = mean( (m1(:)-m2(:)).^2 , 'omitnan' ) .* 1; % calculate MISE
+                                data_matrix_error(ss,bb,uu,3) = corr(m1(:),m2(:),'rows','pairwise','type','Pearson'); % correlation
+                                data_matrix_error(ss,bb,uu,1) = mi(double(m1),double(m2)); % mutual information
+
+                                % euclidean distance
+                                m1 = m1(:);
+                                m2 = m2(:);
+                                idx = ~isnan(m1) & ~isnan(m2);
+                                data_matrix_error(ss,bb,uu,2) = pdist([m1(idx)';m2(idx)'],'euclidean');     
 
                                 %%----%% For inspection only                                
                                     if 0
