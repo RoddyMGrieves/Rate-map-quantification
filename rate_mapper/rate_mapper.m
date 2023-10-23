@@ -285,8 +285,13 @@ function [ratemap,dwellmap,spikemap,rmset,speedlift] = rate_mapper(pos,spk,rmset
     % get spike and position data
     pox = double(pos(:,1));
     poy = double(pos(:,2)); 
-    spx = double(spk(:,1));
-    spy = double(spk(:,2)); 
+    if ~isempty(spk)
+        spx = double(spk(:,1));
+        spy = double(spk(:,2)); 
+    else
+        spx = NaN;
+        spy = NaN;
+    end
 
     % centre data on the origin (i.e. centre on the mid point of the data convex hull)
     mid_x = mean(rmset.maplims([1 3])); % centre in X
@@ -329,7 +334,11 @@ function [ratemap,dwellmap,spikemap,rmset,speedlift] = rate_mapper(pos,spk,rmset
     end
     % project the position and spike data on to the map coordinates
     rmset.map_pos = fx(pos(:,[1 2]));
-    rmset.map_spk = fx(spk(:,[1 2]));  
+    if ~isempty(spk)
+        rmset.map_spk = fx(spk(:,[1 2]));  
+    else
+        rmset.map_spk = [];
+    end
         
 %% >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> IMPLEMENTED MAPPING METHODS
     switch rmset.method
