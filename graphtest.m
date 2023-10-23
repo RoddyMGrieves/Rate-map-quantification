@@ -48,15 +48,21 @@
         [~,~,~] = mkdir(fig_dir);        
     end
     
-    % %% overdispersion settings
-    % % close all;
-    % scratch_space = 'C:\Users\F004KS7\OneDrive - Dartmouth College\Projects in prep\2019 Mapping project\associated data\outputs\overdispersion';
-    % [~,~,~] = mkdir(scratch_space);
-    % fig_dir = 'C:\Users\F004KS7\OneDrive - Dartmouth College\Projects in prep\2019 Mapping project\associated media\outputs\overdispersion';
-    % fig_dir2 = 'C:\Users\F004KS7\OneDrive - Dartmouth College\Projects in prep\2019 Mapping project\main figures\overdispersion';
-    % cd(scratch_space)
+    %% overdispersion settings
+    % close all;
+    scratch_space = 'C:\Users\F004KS7\OneDrive - Dartmouth College\Projects in prep\2019 Mapping project\associated data\outputs\overdispersion';
+    [~,~,~] = mkdir(scratch_space);
+    fig_dir = 'C:\Users\F004KS7\OneDrive - Dartmouth College\Projects in prep\2019 Mapping project\associated media\outputs\overdispersion';
+    fig_dir2 = 'C:\Users\F004KS7\OneDrive - Dartmouth College\Projects in prep\2019 Mapping project\main figures\overdispersion';
+    cd(scratch_space)
 
-
+    %% biased settings
+    % close all;
+    scratch_space = 'C:\Users\F004KS7\OneDrive - Dartmouth College\Projects in prep\2019 Mapping project\associated data\outputs\biased';
+    [~,~,~] = mkdir(scratch_space);
+    fig_dir = 'C:\Users\F004KS7\OneDrive - Dartmouth College\Projects in prep\2019 Mapping project\associated media\outputs\biased';
+    fig_dir2 = 'C:\Users\F004KS7\OneDrive - Dartmouth College\Projects in prep\2019 Mapping project\main figures\biased';
+    cd(scratch_space)
 
 %% overwrite settings
     overwrite_walks                                     = 0;
@@ -72,7 +78,7 @@
     funconfig = struct;
     funconfig.MAP_get_random_walks                      = 0; % create random walks (position data)
     funconfig.MAP_get_fields_and_cells                  = 0; % create fields and cells (spike data)
-    funconfig.MAP_generate_maps                         = 0; % create firing rate maps and compare to original distribution 
+    funconfig.MAP_generate_maps                         = 1; % create firing rate maps and compare to original distribution 
     funconfig.MAP_add_ripley_k                          = 0; % add Ripley's k values (estimate field sizes)
     funconfig.MAP_test_map                              = 0; % small function to run tests on rate_mapper
     funconfig.MAP_fix_datamats                          = 0; % add map parameter matrix to datamat files
@@ -88,11 +94,12 @@
     % summary figures
     figfuns.general.MAP_fig_errors                      = 0; % show MISE, all methods
     figfuns.general.MAP_fig_time_etc                    = 0; %    
-    figfuns.general.MAP_fig_summary                     = 1; % compare different methods
+    figfuns.general.MAP_fig_summary                     = 0; % compare different methods
     figfuns.general.MAP_fig_maps                        = 0; % show error maps, all methods
     figfuns.general.MAP_fig_v2_pareto                   = 0; % show pareto and regression results, all methods
     figfuns.general.MAP_fig_histogram_lit               = 0; % histogram literature review
     figfuns.general.MAP_fig_overdispersion              = 0; % overdispersion analysis
+    figfuns.general.MAP_fig_sampling                    = 0; % biased sampling analysis
 
     % histogram figures
     figfuns.histogram.MAP_fig_1_multi                   = {0,'histogram'}; % example maps, MISE, additional factors, Pareto fronts, regression outcomes
@@ -131,11 +138,11 @@
     config                                              = struct;
     config.environs                                     = {'arena120cm'};
 %     config.trial_lengths                                = [4,16,64];      
-    config.append                                       = {'overdisperse0-0'};    
+    config.append                                       = {'normal'};    
     config.nfields                                      = 512; % 512
     config.npcells                                      = 64; % 256
     config.nwalks                                       = 8;
-    config.biased_walk                                  = 0;        
+    config.biased_walk                                  = 0; % 0 = off, 1 = biased walk, 2 = thigmotaxis     
     config.plot_fields                                  = 100;
     config.plot_cells                                   = 100;
    
@@ -155,7 +162,7 @@
 %     config.analysis_pairs = {4000,  64}; % {field size, [durations]}                         
 % % trial length x field size parameter pairs
     % config.analysis_pairs = {16000, 16}; % {field size, [durations]}
-    config.analysis_pairs = {16000, 4}; % {field size, [durations]} - overdispersion setup    
+    config.analysis_pairs = {16000, 8}; % {field size, [durations]} - overdispersion setup    
 %     config.analysis_pairs = {16000,  [4 16 64]}; % {field size, [durations]}                         
         
 %% mapping settings
@@ -168,8 +175,8 @@
     mapset.steps                                        = 32; % the number of convolution size steps to use for kadaptive    
     mapset.kern                                         = 'biweight'; % kernel
     mapset.smethod                                      = 1; % smoothing method, 1 = before division, 2 = after, 3 = no smoothing
-    mapset.methods                                      = {'ksde','kyadaptive','kadaptive','fyhn'}; % histogram ash ksde kyadaptive kadaptive fyhn
-%     mapset.methods                                      = {'histogram'};    
+    mapset.methods                                      = {'histogram','ash','ksde','kyadaptive','kadaptive','fyhn'}; % histogram ash ksde kyadaptive kadaptive fyhn
+    % mapset.methods                                      = {'ash'};    
     mapset.twindow                                      = 0.25; % time window (s) over which to estimate instantaneous firing for temporal methods
     
     % histogram settings
