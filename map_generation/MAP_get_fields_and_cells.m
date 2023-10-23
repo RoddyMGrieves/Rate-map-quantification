@@ -54,7 +54,7 @@
         all_pos = cell(nwalks,1);
         for ww = 1:nwalks
             wlength = 64;
-            wdir = [scratch_space '\' config.environs{ee} '_' num2str(wlength) '_walk' num2str(ww) '.mat'];
+            wdir = [scratch_space '\' config.environs{ee} '_' num2str(wlength) '_walk' num2str(ww) config.append{1} '.mat'];
             load(wdir,'pox','poy','pot','epoly','emat','wlength'); % load walk data       
 
             pox = fillmissing(pox(:),'linear');
