@@ -61,7 +61,7 @@
     xnow = 520;
     ynow = 730;
     mnames = {'histogram','ash','kadaptive','ksde','fyhn','kyadaptive'};
-mnames = {'histogram','ash'}
+% mnames = {'histogram','ash'}
     
     dnames = {'Histogram','ASH','Adaptive smoothing','KSDE','tKSDE','Adaptive binning'}; 
     mapidx = 4;
@@ -314,7 +314,7 @@ yvec = ynow : -(ysiz+ybuff) : 0;
             end  
         end
     end
-
+return
 %% #################### Example trajectories
     xnow = 70;
     ynow = 700;
