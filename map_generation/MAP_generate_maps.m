@@ -359,10 +359,10 @@
                                 data_matrix_error(ss,bb,uu,1) = mi(double(m1),double(m2)); % mutual information
 
                                 % euclidean distance
-                                m1 = m1(:);
-                                m2 = m2(:);
-                                idx = ~isnan(m1) & ~isnan(m2);
-                                data_matrix_error(ss,bb,uu,2) = pdist([m1(idx)';m2(idx)'],'euclidean');     
+                                m1b = m1(:);
+                                m2b = m2(:);
+                                idx = ~isnan(m1b) & ~isnan(m2b);
+                                data_matrix_error(ss,bb,uu,2) = pdist([m1b(idx)';m2b(idx)'],'euclidean');     
 
                                 %%----%% For inspection only                                
                                     if 0
@@ -413,7 +413,7 @@
                             if 0
                                 figure
                                 % subplot(2,3,1)
-                                x = data_matrix_error(:,:,1,2);
+                                x = data_matrix_error(:,:,1,4);
                                 im = imagesc(x);
                                 set(im,'alphadata',~isnan(x))
                                 daspect([1 1 1])
