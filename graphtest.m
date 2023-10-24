@@ -48,20 +48,21 @@
         [~,~,~] = mkdir(fig_dir);        
     end
     
-    %% overdispersion settings
-    % close all;
-    scratch_space = 'C:\Users\F004KS7\OneDrive - Dartmouth College\Projects in prep\2019 Mapping project\associated data\outputs\overdispersion';
-    [~,~,~] = mkdir(scratch_space);
-    fig_dir = 'C:\Users\F004KS7\OneDrive - Dartmouth College\Projects in prep\2019 Mapping project\associated media\outputs\overdispersion';
-    fig_dir2 = 'C:\Users\F004KS7\OneDrive - Dartmouth College\Projects in prep\2019 Mapping project\main figures\overdispersion';
-    cd(scratch_space)
+%     %% overdispersion settings
+%     % close all;
+%     scratch_space = 'C:\Users\F004KS7\OneDrive - Dartmouth College\Projects in prep\2019 Mapping project\associated data\outputs\overdispersion';
+%     [~,~,~] = mkdir(scratch_space);
+%     fig_dir = 'C:\Users\F004KS7\OneDrive - Dartmouth College\Projects in prep\2019 Mapping project\associated media\outputs\overdispersion';
+%     fig_dir2 = 'C:\Users\F004KS7\OneDrive - Dartmouth College\Projects in prep\2019 Mapping project\main figures\overdispersion';
+%     cd(scratch_space)
 
     %% biased settings
     % close all;
-    scratch_space = 'C:\Users\F004KS7\OneDrive - Dartmouth College\Projects in prep\2019 Mapping project\associated data\outputs\biased';
+    init = 'C:\Users\admin\Documents\OneDrive - Dartmouth College\Projects in prep\2019 Mapping project';
+    scratch_space = [init '\associated data\outputs\biased'];
     [~,~,~] = mkdir(scratch_space);
-    fig_dir = 'C:\Users\F004KS7\OneDrive - Dartmouth College\Projects in prep\2019 Mapping project\associated media\outputs\biased';
-    fig_dir2 = 'C:\Users\F004KS7\OneDrive - Dartmouth College\Projects in prep\2019 Mapping project\main figures\biased';
+    fig_dir = [init '\associated media\outputs\biased'];
+    fig_dir2 = [init '\main figures\biased'];
     cd(scratch_space)
 
 %% overwrite settings
