@@ -99,7 +99,7 @@
     figfuns.general.MAP_fig_v2_pareto                   = 0; % show pareto and regression results, all methods
     figfuns.general.MAP_fig_histogram_lit               = 0; % histogram literature review
     figfuns.general.MAP_fig_overdispersion              = 0; % overdispersion analysis
-    figfuns.general.MAP_fig_sampling                    = 0; % biased sampling analysis
+    figfuns.general.MAP_fig_sampling                    = 1; % biased sampling analysis
 
     % histogram figures
     figfuns.histogram.MAP_fig_1_multi                   = {0,'histogram'}; % example maps, MISE, additional factors, Pareto fronts, regression outcomes
