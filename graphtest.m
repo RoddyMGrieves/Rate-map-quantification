@@ -58,7 +58,8 @@
 
     %% biased settings
     % close all;
-    init = 'C:\Users\admin\Documents\OneDrive - Dartmouth College\Projects in prep\2019 Mapping project';
+    init = 'C:\Users\admin\Documents\OneDrive - Dartmouth College\Projects in prep\2019 Mapping project'; % cheetah pc
+    init = 'C:\Users\F004KS7\OneDrive - Dartmouth College\Projects in prep\2019 Mapping project'; % bonsai PC
     scratch_space = [init '\associated data\outputs\biased'];
     [~,~,~] = mkdir(scratch_space);
     fig_dir = [init '\associated media\outputs\biased'];
@@ -177,7 +178,7 @@
     mapset.kern                                         = 'biweight'; % kernel
     mapset.smethod                                      = 1; % smoothing method, 1 = before division, 2 = after, 3 = no smoothing
     mapset.methods                                      = {'histogram','ash','ksde','kyadaptive','kadaptive','fyhn'}; % histogram ash ksde kyadaptive kadaptive fyhn
-    % mapset.methods                                      = {'ash'};    
+    mapset.methods                                      = {'fyhn'};    
     mapset.twindow                                      = 0.25; % time window (s) over which to estimate instantaneous firing for temporal methods
     
     % histogram settings
