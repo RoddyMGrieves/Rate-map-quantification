@@ -187,6 +187,7 @@
         text(1.04,0.91,sprintf('r = %.1f',corr(x,y,'rows','pairwise','type','Pearson')),'Units','normalized','FontSize',8)
         text(1.04,1.05,sprintf('x = y'),'Units','normalized','FontSize',8)
         
+        keyboard
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% ################################################################# %% Save the figure
     % Save the figure    
