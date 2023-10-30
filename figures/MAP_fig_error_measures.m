@@ -59,7 +59,7 @@
     clims = [1*10^-12 1*10^-11; 0.75 1; 0.001 0.01; 0.1 1];
     interp_method = 'nearest';  
 
-    sols = NaN(length(mnames),2,2,length(bias_names));
+    sols = NaN(length(mnames),2,2,3);
   
     for mm = 1:length(mnames) % for every method
         disp(sprintf('\t%s...',mnames{mm}))
@@ -301,7 +301,7 @@
     ynow = 700;
     jit = 0.05;        
     ax1 = axes('Units','pixels','Position',[xnow ynow 160 130]);  
-        ah = add_panel_title('b',sprintf('Bin size, smoothing & overdispersion'),'yoffset',10,'xoffset',-20,'width',300);                    
+        ah = add_panel_title('b',sprintf('Different error measures'),'yoffset',10,'xoffset',-20,'width',300);                    
 
         bal_bin = squeeze(sols(:,1,1,:)); % all methods, binsize, balanced, all measures
         bal_smoo = squeeze(sols(:,2,1,:)); % all methods, smoothing, balanced, all measures
