@@ -46,172 +46,7 @@
 %% #################### Heading 3
 %% Heading 4
 ovals = {'overdisperse0-0','overdisperse0-8'};
-dispersion = [0 0.8];
-
-if 0
-%% #################### Example fields
-
-            sdir = [scratch_space '\' ename '_sigma16000_duration64' ovals{3} '_sdata.mat'];            
-            disp(sprintf('\t\t...loading %s',sdir));            
-            load(sdir,'sdata'); 
-
-            % cut the position and spike data to the trial length
-            % we want
-            excell = 5;
-            pindx = sdata.pos_index(excell);
-            pos_now = all_pos{pindx,1};
-            pox = pos_now(:,1);
-            poy = pos_now(:,2);
-            pot = pos_now(:,3); 
-
-            spk = sdata.spk{excell};
-            spx = spk(:,1);
-            spy = spk(:,2);
-            spt = spk(:,3);
-
-            tcut = 64*60;
-            ppox = pox(pot<tcut);
-            ppoy = poy(pot<tcut);
-            ppot = pot(pot<tcut);            
-            pspx = spx(spt<tcut);
-            pspy = spy(spt<tcut);
-            pspt = spt(spt<tcut);            
-            pos = [ppox ppoy]; % positions in mm
-            spk = [pspx pspy]; % spikes in mm
-
-            rmset = mapset; % rate mapper settings structure - passing mapset directly to ratemapper causes a memory leak
-            rmset.method = 'histogram';
-            rmset.binsize = 20;
-            rmset.ssigma = 40;
-            rmset.maplims = [-max(abs(epoly(:,1))) -max(abs(epoly(:,2))) max(abs(epoly(:,1))) max(abs(epoly(:,2)))]; 
-            rmset.pot = ppot;
-            rmset.spt = pspt;
-            [ratemap,dwellmap,spikemap,rmset,speedlift] = rate_mapper(pos,spk,rmset);
-
-            [z,overdispersion,r] = getOVERDISPERSE(rmset.map_pos,ppot,pspt,ratemap);
-
-figure
-xi = -10:0.5:10;
-% f = ksdensity(z,xi,'bandwidth',1,'kernel','normal');
-% area(xi,f,'FaceColor','k','FaceAlpha',0.2,'EdgeColor','none'); 
-f = histcounts(z(:),xi,'Normalization','probability');
-x = movmean(xi,2,'EndPoints','discard');
-bar(x,f,1,'k');
-hold on;
-
-xi = -10:0.1:10;
-y = normpdf(-10:0.1:10,0,1);
-y = y ./ nanmax(y(:)) .* nanmax(f(:));
-plot(xi,y,'r'); 
-
-% return
-
-
-
-            % keyboard
-    poxmap = rmset.map_pos(:,1);
-    poymap = rmset.map_pos(:,2);
-    inds = sub2ind(size(ratemap),round(poymap),round(poxmap));
-    exp_frate = ratemap(inds);
-
-    log_field = exp_frate > (max(ratemap(:)).*0.2);
-    n_pass = bwlabel(log_field);
-
-    dv = 50;
-    m = NaN(max(n_pass),dv);
-
-    inst_spikes = histcounts(spt,min(ppot(:))-0.01:0.02:max(ppot(:))+0.01);
-    z = NaN(max(n_pass),1);
-    v = NaN(max(n_pass),2);
-    for pp = 1:max(n_pass)
-        Nobs = sum(inst_spikes(n_pass==pp));
-        Nexp = sum(exp_frate(n_pass==pp).*(1/50));
-        z(pp) = (Nobs-Nexp)/sqrt(Nexp);
-        v(pp,:) = [Nobs Nexp];
-
-        i = inst_spikes(n_pass==pp);
-        if length(i)>dv
-            m(pp,:) = i(1:dv);
-        else
-            m(pp,1:length(i)) = i;
-
-        end
-    end
-
-
-figure
-xi = -10:0.5:10;
-% f = ksdensity(z,xi,'bandwidth',1,'kernel','normal');
-% area(xi,f,'FaceColor','k','FaceAlpha',0.2,'EdgeColor','none'); 
-f = histcounts(z(:),xi,'Normalization','probability');
-x = movmean(xi,2,'EndPoints','discard');
-bar(x,f,1,'k');
-hold on;
-
-xi = -10:0.1:10;
-y = normpdf(-10:0.1:10,0,1);
-y = y ./ nanmax(y(:)) .* nanmax(f(:));
-plot(xi,y,'r'); 
-
-% return
-% figure
-% imagesc(m)
-% 
-% 
-% keyboard
-
-
-figure
-subplot(2,2,1)
-plot(ppox,ppoy,'k'); hold on;
-plot(pspx,pspy,'r.','MarkerSize',20);
-daspect([1 1 1])
-
-subplot(2,2,2)
-imagesc(ratemap)
-daspect([1 1 1])
-axis xy
-
-
-return
-subplot(2,2,3)
-xi = -10:0.5:10;
-% f = ksdensity(z,xi,'bandwidth',1,'kernel','normal');
-% area(xi,f,'FaceColor','k','FaceAlpha',0.2,'EdgeColor','none'); 
-f = histcounts(z(:),xi,'Normalization','probability');
-x = movmean(xi,2,'EndPoints','discard');
-bar(x,f,1,'k');
-hold on;
-
-xi = -10:0.1:10;
-y = normpdf(-10:0.1:10,0,1);
-y = y ./ nanmax(y(:)) .* nanmax(f(:));
-plot(xi,y,'r'); 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-return
-end
-
+nmes = {'No overdispersion','Overdispersion'};
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% ################################################################# %% FUNCTION BODY
@@ -226,7 +61,6 @@ end
     xnow = 520;
     ynow = 730;
     mnames = {'histogram','ash','kadaptive','ksde','fyhn','kyadaptive'};
-mnames = {'histogram','ash','kadaptive','ksde','fyhn','kyadaptive'}
     
     dnames = {'Histogram','ASH','Adaptive smoothing','KSDE','tKSDE','Adaptive binning'}; 
     ls = {'a','b','c','d','e','f','g'};
@@ -355,10 +189,10 @@ yvec = ynow : -(ysiz+ybuff) : 0;
                 %     otherwise
                 if mm==1 && oo==1
                     % text(0,1.04,'4 minutes coverage','HorizontalAl','left','Units','normalized','FontSize',8);
-                    text(-0.15,1.35,'No overdispersion','HorizontalAl','left','Units','normalized','FontSize',11);
+                    text(-0.15,1.35,nmes{1},'HorizontalAl','left','Units','normalized','FontSize',11);
                     text(-0.40,1.38,'b','FontSize',18,'Units','normalized')                    
                 elseif mm==1 && oo==2 
-                    text(0,1.35,'Overdispersion','HorizontalAl','left','Units','normalized','FontSize',11);
+                    text(0,1.35,nmes{2},'HorizontalAl','left','Units','normalized','FontSize',11);
                 end
                 % end  
                 if mm==length(mnames)
@@ -481,8 +315,8 @@ yvec = ynow : -(ysiz+ybuff) : 0;
 
 %% #################### Example overdispersion
     xnow = 70;
-    ynow = 700;
-    ax1 = axes('Units','pixels','Position',[xnow ynow 120 120]);  
+    ynow = 680;
+    ax1 = axes('Units','pixels','Position',[xnow ynow 160 160]);  
         ah = add_panel_title('a',sprintf('Bin size, smoothing & overdispersion'),'yoffset',10,'xoffset',-25,'width',300);                    
 
             sdir = [scratch_space '\' ename '_sigma16000_duration64' ovals{1} '_sdata.mat'];            
@@ -518,7 +352,7 @@ yvec = ynow : -(ysiz+ybuff) : 0;
             plot(pspx,pspy,'r.','MarkerSize',20);
             daspect([1 1 1])
             axis xy off
-            text(0,1.1,sprintf('No overdispersion'),'Units','normalized','HorizontalAlignment','left','FontSize',10)
+            text(0,1.1,sprintf(nmes{1}),'Units','normalized','HorizontalAlignment','left','FontSize',10)
 
         ax1b = axes('Units','pixels','Position',[ax1.Position(1) ax1.Position(2)-90 120 60]); % inset
             tcut = 64*60;
@@ -554,9 +388,9 @@ yvec = ynow : -(ysiz+ybuff) : 0;
             xlabel('Z score')
             ylabel('Probability density')
             ax1b.XLim = [-8 8];
-            text(0.1,1.1,sprintf('%c = %.2f',963,overdispersion),'Units','normalized','HorizontalAlignment','left','FontSize',10)
+            text(0.1,1.15,sprintf('%c = %.2f',963,overdispersion),'Units','normalized','HorizontalAlignment','left','FontSize',10)
 
-    ax1 = axes('Units','pixels','Position',[ax1b.Position(1)+190 ynow 120 120]);  
+    ax1 = axes('Units','pixels','Position',[ax1b.Position(1)+210 ynow 160 160]);  
             sdir = [scratch_space '\' ename '_sigma16000_duration64' ovals{2} '_sdata.mat'];            
             disp(sprintf('\t\t...loading %s',sdir));            
             load(sdir,'sdata'); 
@@ -590,7 +424,7 @@ yvec = ynow : -(ysiz+ybuff) : 0;
             plot(pspx,pspy,'r.','MarkerSize',20);
             daspect([1 1 1])
             axis xy off
-            text(0,1.1,sprintf('Overdispersion'),'Units','normalized','HorizontalAlignment','left','FontSize',10)
+            text(0,1.1,sprintf(nmes{2}),'Units','normalized','HorizontalAlignment','left','FontSize',10)
 
         ax1b = axes('Units','pixels','Position',[ax1.Position(1) ax1.Position(2)-90 120 60]); % inset
             tcut = 64*60;
@@ -630,7 +464,7 @@ yvec = ynow : -(ysiz+ybuff) : 0;
 % return
 %% #################### Differences in binsize and smoothing
     xnow = 80;
-    ynow = ynow-330;
+    ynow = ynow-310;
     ax1 = axes('Units','pixels','Position',[xnow ynow 140 130]);  
         ah = add_panel_title('c',sprintf('Bin size, smoothing & overdispersion'),'yoffset',5,'xoffset',-30,'width',300);                    
 
@@ -647,66 +481,87 @@ yvec = ynow : -(ysiz+ybuff) : 0;
         y1 = (b2-b1) ./ (b2+b1);
         y2 = (b4-b3) ./ (b4+b3);                
         cols = winter(length(mnames));
-        jit = 0.15;
-        errorbar(ones(size(y1)),mean(y1),std(y1),'ko'); hold on;   
-        errorbar(ones(size(y2))+1.5,mean(y2),std(y2),'k^');
-        m1 = scatter(ones(size(y1))+0.5+normrnd(0,jit,size(y2)),y1,80,cols,'filled','o'); hold on;          
-        m2 = scatter(ones(size(y2))+2+normrnd(0,jit,size(y2)),y2,80,cols,'filled','^');
+        msiz = 50;
+        malph = 1;
+        jit = 0.05;
+        errorbar(zeros(size(y1))+1,mean(y1),std(y1),'ko'); hold on;   
+        errorbar(zeros(size(y2))+2,mean(y2),std(y2),'k^');
+        m1 = scatter(zeros(size(y1))+1.5+normrnd(0,jit,size(y2)),y1,msiz,cols,'filled','o','MarkerFaceAlpha',malph); hold on;          
+        m2 = scatter(zeros(size(y2))+2.5+normrnd(0,jit,size(y2)),y2,msiz,cols,'filled','^','MarkerFaceAlpha',malph);
 
-        ax1.XColor = 'none';
-        ax1.XLim = [0.5 3.5];
+        % ax1.XColor = 'none';
+        ax1.XLim = [0.5 3];
         ylabel(sprintf('Bin size difference\n(a-b)/(a+b)'))
         box off
         line(ax1.XLim,[0 0],'Color',[.5 .5 .5]);
+        % text(1.25,ax1.YLim(1),'No overisp.','FontSize',10,'HorizontalAlignment','right','rotation',25)
+        % text(2.25,ax1.YLim(1),'Overdisp.','FontSize',10,'HorizontalAlignment','right','rotation',25)
+        ax1.XTick = [1.25 2.25];
+        ax1.XTickLabel = {'No overisp.','Overdisp.'};
+        xtickangle(ax1,25);
 
         p1 = plot(-1000,1,'ko','MarkerFaceColor','k');
         p2 = plot(-1000,1,'k^','MarkerFaceColor','k');
         [~,leg] = legendflex([p1 p2]...
             ,{'Balanced solution','Minimum error solution'}...
-            ,'anchor',{'s','s'},'ncol',1,'box','off','buffer',[-20,-60],'xscale',0.5,'fontsize',9); 
+            ,'anchor',{'s','s'},'ncol',1,'box','off','buffer',[-20,-80],'xscale',0.5,'fontsize',9); 
 
         xm = [];
         for cm = 1:length(mnames)
             xm(cm) = plot(-1000,1,'color',cols(cm,:),'marker','o','LineStyle','none','MarkerFaceColor',cols(cm,:));
         end
         [~,leg] = legendflex(xm...
-            ,mnames...
-            ,'anchor',{'s','s'},'ncol',2,'box','off','buffer',[150,-75],'xscale',0.5,'fontsize',9); 
+            ,dnames...
+            ,'anchor',{'s','s'},'ncol',2,'box','off','buffer',[190,-100],'xscale',0.5,'fontsize',9); 
 
         % stats
         [H,P,CI] = ttest(y1,0);
         if P<=.05
-            text(1.25,ax1.YLim(2),'*','FontSize',20,'HorizontalAl','center')
+            text(1.25,ax1.YLim(2).*1.15,'*','FontSize',20,'HorizontalAl','center','VerticalAl','top')
+        else
+            text(1.25,ax1.YLim(2).*1.6,'n.s.','FontSize',8,'HorizontalAl','center','VerticalAl','top')            
         end
         [H,P,CI] = ttest(y2,0);
         if P<=.05
-            text(2.75,ax1.YLim(2),'*','FontSize',20,'HorizontalAl','center')
+            text(2.25,ax1.YLim(2).*1.15,'*','FontSize',20,'HorizontalAl','center','VerticalAl','top')
+        else
+            text(2.25,ax1.YLim(2).*1.6,'n.s.','FontSize',8,'HorizontalAl','center','VerticalAl','top')                       
         end        
 
     ax2 = axes('Units','pixels','Position',[xnow+ax1.Position(3)+90 ynow ax1.Position(3) ax1.Position(4)]);  
         y1 = (s2-s1) ./ (s2+s1);
         y2 = (s4-s3) ./ (s4+s3);                
-        errorbar(ones(size(y1)),mean(y1),std(y1),'ko'); hold on;   
-        errorbar(ones(size(y2))+1.5,mean(y2),std(y2),'k^');
-        m1 = scatter(ones(size(y1))+0.5+normrnd(0,jit,size(y2)),y1,80,cols,'filled','o'); hold on;          
-        m2 = scatter(ones(size(y2))+2+normrnd(0,jit,size(y2)),y2,80,cols,'filled','^');
+        errorbar(zeros(size(y1))+1,mean(y1),std(y1),'ko'); hold on;   
+        errorbar(zeros(size(y2))+2,mean(y2),std(y2),'k^');
+        m1 = scatter(zeros(size(y1))+1.5+normrnd(0,jit,size(y2)),y1,msiz,cols,'filled','o','MarkerFaceAlpha',malph); hold on;          
+        m2 = scatter(zeros(size(y2))+2.5+normrnd(0,jit,size(y2)),y2,msiz,cols,'filled','^','MarkerFaceAlpha',malph);
 
-        ax2.XColor = 'none';
-        ax2.XLim = [0.5 3.5];        
+        % ax2.XColor = 'none';
+        ax2.XLim = [0.5 3];        
         ylabel(sprintf('Smoothing difference\n(a-b)/(a+b)'))
         box off
-        line(ax1.XLim,[0 0],'Color',[.5 .5 .5]);
+        line(ax2.XLim,[0 0],'Color',[.5 .5 .5]);
+        % text(1.25,ax2.YLim(1)-(ax2.YLim(1).*0.1),'No overisp.','FontSize',10,'HorizontalAlignment','right','rotation',25)
+        % text(2.25,ax2.YLim(1)-(ax2.YLim(1).*0.1),'Overdisp.','FontSize',10,'HorizontalAlignment','right','rotation',25)
+        ax2.XTick = [1.25 2.25];
+        ax2.XTickLabel = {'No overisp.','Overdisp.'};
+        xtickangle(ax2,25);
 
         % stats
         [H,P,CI] = ttest(y1,0);
         if P<=.05
-            text(1.25,ax2.YLim(2),'*','FontSize',20,'HorizontalAl','center')
+            text(1.25,ax2.YLim(2).*1.15,'*','FontSize',20,'HorizontalAl','center','VerticalAl','top')
+        else
+            text(1.25,ax2.YLim(2).*1.6,'n.s.','FontSize',8,'HorizontalAl','center','VerticalAl','top')
         end
         [H,P,CI] = ttest(y2,0);
         if P<=.05
-            text(2.75,ax2.YLim(2),'*','FontSize',20,'HorizontalAl','center')
+            text(2.25,ax2.YLim(2).*1.15,'*','FontSize',20,'HorizontalAl','center','VerticalAl','top')
+        else
+            text(2.25,ax2.YLim(2).*1.6,'n.s.','FontSize',8,'HorizontalAl','center','VerticalAl','top')
         end
 
+        % return
 %% #################### error and place field error
     mapidx = 4;
 
@@ -780,7 +635,7 @@ yvec = ynow : -(ysiz+ybuff) : 0;
         ax = gca;
         ax.XLim = [0.5 2.5];
         ax.XTick = dispersion;
-        ax.XTickLabel = {'No dispersion','Dispersion'};        
+        ax.XTickLabel = nmes;        
         ax.YTick = (ones(1,20).*10).^-[20:-1:1];        
         % ax.YLim = [-1*10^-12 16*10^-12]; 
         % ax.YTick = 0:1:5;
@@ -793,7 +648,7 @@ yvec = ynow : -(ysiz+ybuff) : 0;
         % text(0.99,1.1,'N = 256 cells','Units','normalized','HorizontalAlignment','right','VerticalAlignment','top')
         box off
 
-        [result1,result2] = plotsigbrackets([means(:,1); means(:,2)],[ones(size(means,1),1); ones(size(means,1),1).*2],'plot_omnibus',1);
+        [result1,result2] = plotsigbrackets([means(:,1); means(:,2)],[ones(size(means,1),1); ones(size(means,1),1).*2],'plot_omnibus',0);
 
     % field detection results
     ax4 = axes('Units','pixels','Position',[ax2.Position(1) ynow ax3.Position(3) ax3.Position(4)]); 
@@ -806,21 +661,23 @@ yvec = ynow : -(ysiz+ybuff) : 0;
             enow = squeeze(p_vals(:,mm,1,:)); % balanced
             vals(mm,:) = sum(enow==0,1,'omitnan') ./ size(enow,1);
 
-            plot(dispersion,vals(mm,:),'Color',cols(mm,:),'Marker','o'); hold on;
+            plot(dispersion+normrnd(0,0.05,size(vals(mm,:))),vals(mm,:),'Color',cols(mm,:),'Marker','o'); hold on;
         end
 
         ax = gca;
         ax.XLim = [0.5 2.5];
         ax.XTick = dispersion;
-        ax.XTickLabel = {'No dispersion','Dispersion'};
-        ax.YLim = [0.9 1]; 
+        ax.XTickLabel = nmes;
+        ax.YLim = [0.94 1]; 
         ylabel(sprintf('Prop. correct place field count'))  
         % xlabel('Dispersion (a_{mod})')        
         % text(0.99,1.1,'N = 256 cells','Units','normalized','HorizontalAlignment','right','VerticalAlignment','top')
         box off
 
-        [result1,result2] = plotsigbrackets([vals(:,1); vals(:,2)],[ones(size(vals,1),1); ones(size(vals,1),1).*2],'plot_omnibus',1);
-
+        [result1,result2] = plotsigbrackets([vals(:,1); vals(:,2)],[ones(size(vals,1),1); ones(size(vals,1),1).*2],'plot_omnibus',0);
+        % text(1.5,ax.YLim(2).*1.1,'n.s.','FontSize',10,'HorizontalAl','center')            
+        % 
+        % keyboard
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% ################################################################# %% Save the figure
     % Save the figure    
