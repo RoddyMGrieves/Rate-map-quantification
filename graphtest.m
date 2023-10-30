@@ -48,23 +48,25 @@
         [~,~,~] = mkdir(fig_dir);        
     end
     
-%     %% overdispersion settings
-%     % close all;
-%     scratch_space = 'C:\Users\F004KS7\OneDrive - Dartmouth College\Projects in prep\2019 Mapping project\associated data\outputs\overdispersion';
-%     [~,~,~] = mkdir(scratch_space);
-%     fig_dir = 'C:\Users\F004KS7\OneDrive - Dartmouth College\Projects in prep\2019 Mapping project\associated media\outputs\overdispersion';
-%     fig_dir2 = 'C:\Users\F004KS7\OneDrive - Dartmouth College\Projects in prep\2019 Mapping project\main figures\overdispersion';
-%     cd(scratch_space)
+    % init = 'C:\Users\F004KS7\OneDrive - Dartmouth College\Projects in prep\2019 Mapping project'; % desktop pc
+    % init = 'C:\Users\admin\Documents\OneDrive - Dartmouth College\Projects in prep\2019 Mapping project'; % cheetah pc
+    % init = 'C:\Users\F004KS7\OneDrive - Dartmouth College\Projects in prep\2019 Mapping project'; % bonsai PC
 
-    %% biased settings
-    % close all;
-    init = 'C:\Users\admin\Documents\OneDrive - Dartmouth College\Projects in prep\2019 Mapping project'; % cheetah pc
-    init = 'C:\Users\F004KS7\OneDrive - Dartmouth College\Projects in prep\2019 Mapping project'; % bonsai PC
-    scratch_space = [init '\associated data\outputs\biased'];
-    [~,~,~] = mkdir(scratch_space);
-    fig_dir = [init '\associated media\outputs\biased'];
-    fig_dir2 = [init '\main figures\biased'];
-    cd(scratch_space)
+    % %% overdispersion settings
+    % % close all;
+    % scratch_space = [init '\associated data\outputs\overdispersion'];
+    % [~,~,~] = mkdir(scratch_space);
+    % fig_dir = [init '\associated media\outputs\overdispersion'];
+    % fig_dir2 = [init '\main figures\overdispersion'];
+    % cd(scratch_space)
+
+    % %% biased settings
+    % % close all;
+    % scratch_space = [init '\associated data\outputs\biased'];
+    % [~,~,~] = mkdir(scratch_space);
+    % fig_dir = [init '\associated media\outputs\biased'];
+    % fig_dir2 = [init '\main figures\biased'];
+    % cd(scratch_space)
 
 %% overwrite settings
     overwrite_walks                                     = 0;
@@ -80,7 +82,7 @@
     funconfig = struct;
     funconfig.MAP_get_random_walks                      = 0; % create random walks (position data)
     funconfig.MAP_get_fields_and_cells                  = 0; % create fields and cells (spike data)
-    funconfig.MAP_generate_maps                         = 1; % create firing rate maps and compare to original distribution 
+    funconfig.MAP_generate_maps                         = 0; % create firing rate maps and compare to original distribution 
     funconfig.MAP_add_ripley_k                          = 0; % add Ripley's k values (estimate field sizes)
     funconfig.MAP_test_map                              = 0; % small function to run tests on rate_mapper
     funconfig.MAP_fix_datamats                          = 0; % add map parameter matrix to datamat files
@@ -94,14 +96,16 @@
     figfuns.general.MAP_fig_ripley_k                    = 0; % Ripley's K method and result 
     
     % summary figures
-    figfuns.general.MAP_fig_errors                      = 0; % show MISE, all methods
+    figfuns.general.MAP_fig_errors                      = 1; % show MISE, all methods
     figfuns.general.MAP_fig_time_etc                    = 0; %    
     figfuns.general.MAP_fig_summary                     = 0; % compare different methods
     figfuns.general.MAP_fig_maps                        = 0; % show error maps, all methods
     figfuns.general.MAP_fig_v2_pareto                   = 0; % show pareto and regression results, all methods
     figfuns.general.MAP_fig_histogram_lit               = 0; % histogram literature review
     figfuns.general.MAP_fig_overdispersion              = 0; % overdispersion analysis
-    figfuns.general.MAP_fig_sampling                    = 1; % biased sampling analysis
+    figfuns.general.MAP_fig_sampling                    = 0; % biased sampling analysis
+    figfuns.general.MAP_fig_error_measures              = 0; % compare different error measures, must be in biased directory
+    figfuns.general.MAP_fig_ex_pcells                   = 0; % example real place cells
 
     % histogram figures
     figfuns.histogram.MAP_fig_1_multi                   = {0,'histogram'}; % example maps, MISE, additional factors, Pareto fronts, regression outcomes
@@ -178,7 +182,7 @@
     mapset.kern                                         = 'biweight'; % kernel
     mapset.smethod                                      = 1; % smoothing method, 1 = before division, 2 = after, 3 = no smoothing
     mapset.methods                                      = {'histogram','ash','ksde','kyadaptive','kadaptive','fyhn'}; % histogram ash ksde kyadaptive kadaptive fyhn
-    mapset.methods                                      = {'fyhn'};    
+    mapset.methods                                      = {'histogram'};    
     mapset.twindow                                      = 0.25; % time window (s) over which to estimate instantaneous firing for temporal methods
     
     % histogram settings
