@@ -157,6 +157,11 @@
             bmat = data_matrix_params(:,:,1); % binsizes used when generating maps
             smat = data_matrix_params(:,:,2); % smoothing used when generating maps                
 
+            dme = data_matrix_error(:,:,:,4);
+            mat_e = mean(dme,3,'double','omitnan');  
+            [r,p] = corr(mat1(:),mat_e(:),'rows','pairwise','type','Pearson');
+            disp(sprintf('\tcorr between error,fields %s: %.3f, p = %.4f',mname,r,p))
+
             Vq1 = interp2(bmat,smat,mat1,Xq,Yq,interp_method);
             im = surf(Xq,Yq,Vq1,'EdgeColor','none'); hold on;
             colormap(gca,cmapnow) 
