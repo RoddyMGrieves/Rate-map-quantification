@@ -56,7 +56,7 @@
 
     % method settings
     xnow = 70;
-    ynow = 780;
+    ynow = 580;
     mnames = {'histogram','ash','kadaptive','ksde','fyhn','kyadaptive'};
     dnames = {'Histogram','ASH','Adaptive smoothing','KSDE','tKSDE','Adaptive binning'}; 
     ls = {'a','b','c','d','e','f','g'};
