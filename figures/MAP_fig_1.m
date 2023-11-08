@@ -57,7 +57,7 @@
     xnow = 150;
     ynow = 550;
 
-    excell = 31;
+    excell = 46;
 
     wdir = [scratch_space '\' ename '_64_walk1.mat'];
     load(wdir,'epoly');  
@@ -80,7 +80,7 @@
     h = 200;
     scale = (axe.Position(4)/1200)*h;
     axp = axes('Units','pixels','Position',[axe.Position(1)+10 axe.Position(2)+10 scale*2 scale]); 
-        ir = imread('C:\Users\F004KS7\OneDrive - Dartmouth College\Projects in prep\2019 Mapping project\associated media\rat_silh.png');
+        ir = imread('C:\Users\F004KS7\OneDrive - Dartmouth College\Projects in prep\2019 Mapping project\associated media\rat_silh_v2.png');
         image(ir);
         axis off ij
         daspect([1 1 1])
@@ -99,9 +99,6 @@
         cents = sdata.centroids{excell};
         sigma =  sdata.sigs{excell};            
         text(0.1,-0.1,sprintf('Centroid = %d, %d\n%c_{x} = %.f, %c_{y} = %.f, %c_{xy} = %.f',cents(1),cents(2),963,sqrt(sigma(1)),963,sqrt(sigma(2)),963,sigma(3)),'Units','normalized','FontSize',8,'HorizontalAl','left')
-
-
-
 
     ax = axes('Units','pixels','Position',[axp.Position(1)+200 axp.Position(2)+40 10 120]);
         x = 1:100;

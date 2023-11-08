@@ -60,13 +60,13 @@
     % fig_dir2 = [init '\main figures\overdispersion'];
     % cd(scratch_space)
 
-    %% biased settings
-    % close all;
-    scratch_space = [init '\associated data\outputs\biased'];
-    [~,~,~] = mkdir(scratch_space);
-    fig_dir = [init '\associated media\outputs\biased'];
-    fig_dir2 = [init '\main figures\biased'];
-    cd(scratch_space)
+    % %% biased settings
+    % % close all;
+    % scratch_space = [init '\associated data\outputs\biased'];
+    % [~,~,~] = mkdir(scratch_space);
+    % fig_dir = [init '\associated media\outputs\biased'];
+    % fig_dir2 = [init '\main figures\biased'];
+    % cd(scratch_space)
 
 %% overwrite settings
     overwrite_walks                                     = 0;
@@ -92,7 +92,7 @@
     figfuns = struct;
 
     % intro figures
-    figfuns.general.MAP_fig_1                           = 0; % Example spikes, trajectories, general method    
+    figfuns.general.MAP_fig_1                           = 1; % Example spikes, trajectories, general method    
     figfuns.general.MAP_fig_ripley_k                    = 0; % Ripley's K method and result 
     
     % summary figures
@@ -103,7 +103,7 @@
     figfuns.general.MAP_fig_v2_pareto                   = 0; % show pareto and regression results, all methods
     figfuns.general.MAP_fig_histogram_lit               = 0; % histogram literature review
     figfuns.general.MAP_fig_overdispersion              = 0; % overdispersion analysis
-    figfuns.general.MAP_fig_sampling                    = 1; % biased sampling analysis
+    figfuns.general.MAP_fig_sampling                    = 0; % biased sampling analysis
     figfuns.general.MAP_fig_error_measures              = 0; % compare different error measures, must be in biased directory
     figfuns.general.MAP_fig_ex_pcells                   = 0; % example real place cells
 
