@@ -355,20 +355,7 @@
                                 m2 = m2 ./ sum(m2(:),'omitnan') ./ 1; % normalize    
                                 data_matrix_error(ss,bb,uu,4) = mean( (m1(:)-m2(:)).^2 , 'omitnan' ) .* 1; % calculate MISE
                                 data_matrix_error(ss,bb,uu,3) = corr(m1(:),m2(:),'rows','pairwise','type','Pearson'); % correlation
-                                % data_matrix_error(ss,bb,uu,1) = mi(double(m1),double(m2)); % mutual information
-
-% m1 = m1 ./ max(m1(:),[],'omitnan');
-% m2 = m2 ./ max(m2(:),[],'omitnan');
-% rmap8 = im2uint8(m1);
-% dmap8 = im2uint8(m2);
-% p = imhist(rmap8(:));
-% q = imhist(dmap8(:));
-% p = p ./ numel(rmap8);
-% q = q ./ numel(dmap8);
-% p = p + eps; % add smallest possible amount to avoid log of 0
-% q = q + eps;
-% data_matrix_error(ss,bb,uu,1) = MutualInformation(rmap8(:),dmap8(:)); % mutual information
-% data_matrix_error(ss,bb,uu,1) = sum(p .* (log2(p) - log2(q))); % KLD
+                                data_matrix_error(ss,bb,uu,1) = mi(double(m1),double(m2)); % mutual information
 
                                 % euclidean distance
                                 m1b = m1(:);
@@ -422,7 +409,7 @@
                         end
                         
                         %%----%% For inspection only                                
-                            if 1
+                            if 0
                                 figure
                                 % subplot(2,3,1)
                                 x = data_matrix_error(:,:,1,1);
@@ -433,6 +420,7 @@
                                 title('MSE')
                                 caxis('auto')
                                 colormap(flipud(inferno(64)))
+                                colormap(inferno(64))                                
                                 set(gca,'ColorScale','log') 
                                 colorbar
                                 keyboard

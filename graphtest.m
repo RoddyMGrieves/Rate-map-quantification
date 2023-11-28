@@ -68,6 +68,14 @@
     % fig_dir2 = [init '\main figures\biased'];
     % cd(scratch_space)
 
+    %% error method settings
+    % close all;
+    scratch_space = [init '\associated data\outputs\errors'];
+    [~,~,~] = mkdir(scratch_space);
+    fig_dir = [init '\associated media\outputs\errors'];
+    fig_dir2 = [init '\main figures\errors'];
+    cd(scratch_space)
+
 %% overwrite settings
     overwrite_walks                                     = 0;
     overwrite_fields                                    = 0;    
@@ -81,8 +89,8 @@
 %% Functions to run
     funconfig = struct;
     funconfig.MAP_get_random_walks                      = 0; % create random walks (position data)
-    funconfig.MAP_get_fields_and_cells                  = 0; % create fields and cells (spike data)
-    funconfig.MAP_generate_maps                         = 0; % create firing rate maps and compare to original distribution 
+    funconfig.MAP_get_fields_and_cells                  = 1; % create fields and cells (spike data)
+    funconfig.MAP_generate_maps                         = 1; % create firing rate maps and compare to original distribution 
     funconfig.MAP_add_ripley_k                          = 0; % add Ripley's k values (estimate field sizes)
     funconfig.MAP_test_map                              = 0; % small function to run tests on rate_mapper
     funconfig.MAP_fix_datamats                          = 0; % add map parameter matrix to datamat files
@@ -92,7 +100,7 @@
     figfuns = struct;
 
     % intro figures
-    figfuns.general.MAP_fig_1                           = 1; % Example spikes, trajectories, general method    
+    figfuns.general.MAP_fig_1                           = 0; % Example spikes, trajectories, general method    
     figfuns.general.MAP_fig_ripley_k                    = 0; % Ripley's K method and result 
     
     % summary figures
@@ -144,7 +152,7 @@
     config                                              = struct;
     config.environs                                     = {'arena120cm'};
 %     config.trial_lengths                                = [4,16,64];      
-    config.append                                       = {'normal'};    
+    config.append                                       = {'errors'};    
     config.nfields                                      = 512; % 512
     config.npcells                                      = 64; % 256
     config.nwalks                                       = 8;
@@ -182,7 +190,7 @@
     mapset.kern                                         = 'biweight'; % kernel
     mapset.smethod                                      = 1; % smoothing method, 1 = before division, 2 = after, 3 = no smoothing
     mapset.methods                                      = {'histogram','ash','ksde','kyadaptive','kadaptive','fyhn'}; % histogram ash ksde kyadaptive kadaptive fyhn
-    mapset.methods                                      = {'histogram'};    
+    % mapset.methods                                      = {'histogram'};    
     mapset.twindow                                      = 0.25; % time window (s) over which to estimate instantaneous firing for temporal methods
     
     % histogram settings
