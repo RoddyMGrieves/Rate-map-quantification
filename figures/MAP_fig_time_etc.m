@@ -61,7 +61,7 @@
     ynow = 730;
     mnames = {'histogram','ash','kadaptive','ksde','fyhn','kyadaptive'};
     dnames = {'Histogram','Averaged Shifted Histogram (ASH)','Adaptive Smoothing','Kernel Smoothed Density Estimate (KSDE)','Temporal KSDE','Adaptive Binning'}; 
-    ls = {'a','b','c','d','e','f','g'};
+    ls = {'A','B','C','D','E','F','G'};
     mapidx = 4;
     xsiz = 200;
     xbuff = 240;
@@ -374,9 +374,9 @@
 %% ################################################################# %% Save the figure
     % Save the figure    
     disp(sprintf('\tSaving figure...'))    
-    figname = [fig_dir2 '\v2_fig_time_matrix.png'];
+    figname = [fig_dir2 '\Fig 8.png'];
     [~,~,~] = mkdir(fig_dir2);    
-    exportgraphics(fig1,figname,'BackgroundColor','w','ContentType','image','Resolution',250);  
+    exportgraphics(fig1,figname,'BackgroundColor','w','ContentType','image','Resolution',350);  
     close(fig1)    
     
     

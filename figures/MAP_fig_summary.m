@@ -60,14 +60,14 @@
     colormap(jet(256)); % to make sure the colormap is not the horrible default one
 
     xnow = 80;
-    ynow = 800;
+    ynow = 790;
 
     mapidx = 4;
     disp(sprintf('\tMISE map...'))
 
     % main panel showing 16 minute error results
     ax1 = axes('Units','pixels','Position',[xnow ynow-5 300 170]); 
-        ah = add_panel_title('a',sprintf('Error across mapping methods'),'yoffset',5,'xoffset',-30,'width',300);                    
+        ah = add_panel_title('A',sprintf('Error across mapping methods'),'yoffset',5,'xoffset',-30,'width',300);                    
    
         mnames = {'fyhn','histogram','ash','kadaptive','ksde','kyadaptive'};
         dnames = {'tKSDE','Histogram','ASH','Adaptive\nsmoothing','KSDE','Adaptive\nbinning'};
@@ -156,20 +156,17 @@
         [~,leg] = legendflex([p1 p2],{'Balanced solution','Minimum error solution'},'anchor',{'sw','sw'},'ncol',1,'box','off','buffer',[0,-70],'xscale',.5,'fontsize',9); 
         text(0.99,0.85,'N = 256 cells','Units','normalized','HorizontalAlignment','right','VerticalAlignment','top')
 
-    ax_sig = axes('Units','pixels','Position',ax1.Position+[-10 140 0 -130],'Color','none'); 
-        ax = gca;
-        ax.XLim = ax1.XLim;
-        axis off
-        % [p,a,sts] = anova1(ds1,gs,'off');
-        % c = multcompare(sts,'Display','off');
-        % keyboard        
-        [result1,result2] = plotsigbrackets(ds1,gs,'bracket_text_fsize',0);
+    ax_sig = axes('Units','pixels','Position',ax1.Position-[0 30 0 0],'Color','none'); 
+        ax_sig.XLim = ax1.XLim;
+        ax_sig.YLim = ax1.YLim;
+        axis off   
+        [result1,result2] = plotsigbrackets(ds1,gs,'bracket_text_fsize',0,'bracket_y_gap_coeff',50);
 
 %% #################### computation time
     xnow = xnow+400;
     sep = 10;
     ax1 = axes('Units','pixels','Position',[xnow ynow-20 300 160-sep],'Color','none','Clipping','off'); 
-        ah = add_panel_title('b',sprintf('Computation time across mapping methods'),'yoffset',35,'xoffset',-30,'width',300);                    
+        ah = add_panel_title('B',sprintf('Computation time across mapping methods'),'yoffset',35,'xoffset',-30,'width',300);                    
     
         [g,~] = meshgrid(1:size(time_vals,2),1:size(time_vals,1));
         gs = g(:);
@@ -212,21 +209,17 @@
             text(ii,ax.YLim(1),sprintf(dnames{ii}),'VerticalAlignment','top','HorizontalAlignment','center','FontSize',8)
         end
 
-    ax_sig = axes('Units','pixels','Position',ax1.Position+[-10 150 0 -100],'Color','none'); 
-        ax = gca;
-        ax.XLim = ax1.XLim;
-        axis off
-        % [p,a,sts] = anova1(ds1,gs,'off');
-        % c = multcompare(sts,'Display','off');
-        % keyboard
-        [result1,result2] = plotsigbrackets(ds1,gs,'bracket_text_fsize',0);
-
+    ax_sig = axes('Units','pixels','Position',ax1.Position-[0 0 0 0],'Color','none'); 
+        ax_sig.XLim = ax1.XLim;
+        ax_sig.YLim = ax1.YLim;
+        axis off   
+        [result1,result2] = plotsigbrackets(ds2,gs,'bracket_text_fsize',0,'bracket_y_gap_coeff',50);
 
 %% #################### field error
     xnow = 80;
     ynow = ynow-290;
     ax1 = axes('Units','pixels','Position',[xnow ynow 300 170],'Color','none','Clipping','off'); 
-        ah = add_panel_title('c',sprintf('Place field accuracy across mapping methods'),'yoffset',0,'xoffset',-30,'width',300);                    
+        ah = add_panel_title('C',sprintf('Place field accuracy across mapping methods'),'yoffset',0,'xoffset',-30,'width',300);                    
 
         x = [(mean(g,1,'omitnan')-0.2)' (mean(g,1,'omitnan')+0.2)'];
         y = [sum(p_vals(:,:,1)==0,1,'omitnan')' sum(p_vals(:,:,2)==0,1,'omitnan')'] ./ size(p_vals,1);
@@ -256,7 +249,7 @@
 %% #################### empty bins
     xnow = xnow+400;
     ax1 = axes('Units','pixels','Position',[xnow ynow-35 300 170-sep],'Color','none','Clipping','off'); 
-        ah = add_panel_title('d',sprintf('Empty bins across mapping methods'),'yoffset',45,'xoffset',-30,'width',300);                    
+        ah = add_panel_title('D',sprintf('Empty bins across mapping methods'),'yoffset',45,'xoffset',-30,'width',300);                    
     
         [g,~] = meshgrid(1:size(m_vals,2),1:size(m_vals,1));
         gs = g(:);
@@ -295,15 +288,11 @@
             text(ii,ax.YLim(1),sprintf(dnames{ii}),'VerticalAlignment','top','HorizontalAlignment','center','FontSize',8)
         end
 
-
-    ax_sig = axes('Units','pixels','Position',ax1.Position+[-10 175 0 -120],'Color','none'); 
-        ax = gca;
-        ax.XLim = ax1.XLim;
-        axis off
-        % [p,a,sts] = anova1(ds1,gs,'off');
-        % c = multcompare(sts,'Display','off');
-        % keyboard
-        [result1,result2] = plotsigbrackets(ds1,gs,'bracket_text_fsize',0);
+    ax_sig = axes('Units','pixels','Position',ax1.Position-[0 -10 0 0],'Color','none'); 
+        ax_sig.XLim = ax1.XLim;
+        ax_sig.YLim = ax1.YLim;
+        axis off   
+        [result1,result2] = plotsigbrackets(ds2,gs,'bracket_text_fsize',0,'bracket_y_gap_coeff',50);
 
 %% #################### Heatmap of error by binsize and smoothing
     dnames = {'tKSDE','Histogram','ASH','Adaptive smoothing','KSDE','Adaptive binning'};        
@@ -325,7 +314,7 @@
         colormap(gca,rmap_colormap)
 
         text(0,1.05,sprintf('Spike probability map'),'HorizontalAl','left','Units','normalized','FontSize',8,'rotation',0,'Color','k','VerticalAl','bottom')  
-        ah = add_panel_title('e',sprintf('Minimum error and balanced rate maps'),'yoffset',10,'xoffset',0,'width',300);    
+        ah = add_panel_title('E',sprintf('Minimum error and balanced rate maps'),'yoffset',10,'xoffset',0,'width',300);    
 
     % colorbar
     ax = axes('Units','pixels','Position',[ax1.Position(1)+125 ax1.Position(2)+10 10 siz-10]);
@@ -463,9 +452,9 @@
 %% ################################################################# %% Save the figure
     % Save the figure    
     disp(sprintf('\tSaving figure...'))    
-    figname = [fig_dir2 '\method_summary.png'];
+    figname = [fig_dir2 '\Fig 10.png'];
     [~,~,~] = mkdir(fig_dir2);    
-    exportgraphics(fig1,figname,'BackgroundColor','w','ContentType','image','Resolution',250);  
+    exportgraphics(fig1,figname,'BackgroundColor','w','ContentType','image','Resolution',350);  
     close(fig1)    
     
     

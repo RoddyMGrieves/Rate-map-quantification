@@ -35,16 +35,17 @@
         all_pos(ww,1) = {[pox(:) poy(:) pot(:)]};
     end
     
-    % if ~exist('sdata','var')
+    if ~exist('sdata','var')
         sdir = [scratch_space '\' config.environs{1} '_sigma8000_duration64_sdata.mat'];            
         disp(sprintf('\t\t...loading %s',sdir));            
         load(sdir,'sdata'); 
-    % end
+    end
 
     ename = 'arena120cm'; 
     mname = 'histogram';
     fmap_colormap = 'turbo';
     other_colormap = 'hot';
+    font_siz = 12;
     
 %% ##################################### Heading 2
 %% #################### Heading 3
@@ -58,7 +59,7 @@
     colormap(jet(256)); % to make sure the colormap is not the horrible default one
 
     binsize = 50;
-    
+
 %% #################### Spikes and trajectory
     xnow = 50;
     ynow = 500;
@@ -87,11 +88,11 @@
         daspect([1 1 1])
         axis xy off  
         text_offset = 1.07;
-        text(0,text_offset,'16 minute session','Units','normalized','FontSize',8,'HorizontalAl','left');
+        text(0,text_offset,'16 minute session','Units','normalized','FontSize',font_siz+2,'HorizontalAl','left');
 
         [~,leg] = legendflex([p1 s1]...
             ,{'positions','spikes'}...
-            ,'anchor',{'s','s'},'ncol',1,'box','off','buffer',[-30,-40],'xscale',1,'fontsize',9); 
+            ,'anchor',{'s','s'},'ncol',1,'box','off','buffer',[-30,-45],'xscale',1,'fontsize',font_siz); 
 
     % create unsmoothed ratemap
     rmset = mapset; % rate mapper settings structure - passing mapset directly to ratemapper causes a memory leak
@@ -114,7 +115,7 @@
         axis xy off  
         ax2.XLim = [min(map_grid(:,1)) max(map_grid(:,1))];
         ax2.YLim = [min(map_grid(:,2)) max(map_grid(:,2))];        
-        text(0,text_offset,sprintf('Position data'),'Units','normalized','FontSize',8,'HorizontalAl','left')
+        text(0,text_offset,sprintf('Position data'),'Units','normalized','FontSize',font_siz,'HorizontalAl','left')
     
     % spikes
     ax3 = axes('Units','pixels','Position',[ax2.Position(1) ax2.Position(2)-200 ax2.Position(3) ax2.Position(4)]);   
@@ -125,7 +126,7 @@
         axis xy off 
         ax3.XLim = [min(map_grid(:,1)) max(map_grid(:,1))];
         ax3.YLim = [min(map_grid(:,2)) max(map_grid(:,2))];         
-        text(0,text_offset,sprintf('Spikes'),'Units','normalized','FontSize',8,'HorizontalAl','left')
+        text(0,text_offset,sprintf('Spikes'),'Units','normalized','FontSize',font_siz,'HorizontalAl','left')
     
     % trajectory + bins
     vbuff = 10;
@@ -139,7 +140,7 @@
         Vq = ones(size(Xq));
         surf(Xq,Yq,Vq,'EdgeColor','k','FaceAlpha',0); hold on;
         view(0,90)
-        text(0,text_offset,sprintf('Position bins'),'Units','normalized','FontSize',8,'HorizontalAl','left')
+        text(0,text_offset,sprintf('Position bins'),'Units','normalized','FontSize',font_siz,'HorizontalAl','left')
         ax4.XLim = ax2.XLim;
         ax4.YLim = ax2.YLim;
         
@@ -151,7 +152,7 @@
         axis xy off         
         surf(Xq,Yq,Vq,'EdgeColor','k','FaceAlpha',0); hold on;
         view(0,90)
-        text(0,text_offset,sprintf('Spike bins'),'Units','normalized','FontSize',8,'HorizontalAl','left')
+        text(0,text_offset,sprintf('Spike bins'),'Units','normalized','FontSize',font_siz,'HorizontalAl','left')
         ax5.XLim = ax3.XLim;
         ax5.YLim = ax3.YLim;
         
@@ -164,7 +165,7 @@
         view(0,90)
         ax6.XLim = ax4.XLim;
         ax6.YLim = ax4.YLim;
-        text(0,text_offset,sprintf('Dwell map'),'Units','normalized','FontSize',8,'HorizontalAl','left')
+        text(0,text_offset,sprintf('Dwell map'),'Units','normalized','FontSize',font_siz,'HorizontalAl','left')
         colormap(ax6,other_colormap)
         
     % spikemap
@@ -176,7 +177,7 @@
         view(0,90)
         ax7.XLim = ax5.XLim;
         ax7.YLim = ax5.YLim;
-        text(0,text_offset,sprintf('Spike map'),'Units','normalized','FontSize',8,'HorizontalAl','left')
+        text(0,text_offset,sprintf('Spike map'),'Units','normalized','FontSize',font_siz,'HorizontalAl','left')
         colormap(ax7,other_colormap)
         
     % dwellmap convolution
@@ -222,7 +223,7 @@
         view(0,90)
         ax10.XLim = ax4.XLim;
         ax10.YLim = ax4.YLim;
-        text(0,text_offset,sprintf('Smoothed dwell map'),'Units','normalized','FontSize',8,'HorizontalAl','left')
+        text(0,text_offset,sprintf('Smoothed dwell map'),'Units','normalized','FontSize',font_siz,'HorizontalAl','left')
         colormap(ax10,other_colormap)
         
         axc = axes('Units','pixels','Position',[ax10.Position(1)+ax10.Position(3)+10 ax10.Position(2)+0 12 ax10.Position(4)*0.9]); 
@@ -245,7 +246,7 @@
         view(0,90)
         ax11.XLim = ax5.XLim;
         ax11.YLim = ax5.YLim;    
-        text(0,text_offset,sprintf('Smoothed spike map'),'Units','normalized','FontSize',8,'HorizontalAl','left')
+        text(0,text_offset,sprintf('Smoothed spike map'),'Units','normalized','FontSize',font_siz,'HorizontalAl','left')
         colormap(ax11,other_colormap)
     
     % ratemap
@@ -257,7 +258,7 @@
         view(0,90)
         ax12.XLim = ax5.XLim;
         ax12.YLim = ax5.YLim;     
-        text(0,text_offset,sprintf('Firing rate map'),'Units','normalized','FontSize',8,'HorizontalAl','left')
+        text(0,text_offset,sprintf('Firing rate map'),'Units','normalized','FontSize',font_siz+2,'HorizontalAl','left')
         colormap(ax12,fmap_colormap)
     
         axc = axes('Units','pixels','Position',[ax12.Position(1)+ax12.Position(3)+10 ax12.Position(2)+0 12 ax12.Position(4)*0.9]); 
@@ -274,34 +275,38 @@
     
         lwid = 1.3;
         annotation('line',[0.03 0.10],[0.73 0.73],'LineWidth',lwid) % to position/spike plot
-        
-        spike_y = 0.260;        
-        annotation('line',[0.03 0.03],[0.73 spike_y],'LineWidth',lwid) % down side
-        annotation('arrow',[0.03 0.06],[spike_y spike_y],'LineWidth',lwid) % to spike plot 
-        annotation('arrow',[0.0925 0.164],[spike_y spike_y],'LineWidth',lwid) % spikes to spike bins
-        annotation('arrow',[0.215 0.275],[spike_y spike_y],'LineWidth',lwid) % spike bins to spike map
-        annotation('arrow',[0.318 0.432],[spike_y spike_y],'LineWidth',lwid) % spike map to smoothed spike map
-        annotation('line',[0.513 0.58],[spike_y spike_y],'LineWidth',lwid) % smoothed spike map to side
+
+        % pos_y = 0.510;
+        pos_y = 0.530;       
+        annotation('arrow',[0.03 0.03],[0.73 pos_y],'LineWidth',lwid) % down side        
+        annotation('arrow',[0.03 0.58],[pos_y pos_y],'LineWidth',lwid) % to pos plot    
+        % annotation('arrow',[0.03 0.06],[pos_y pos_y],'LineWidth',lwid) % to pos plot 
+        % annotation('arrow',[0.133 0.164],[pos_y pos_y],'LineWidth',lwid) % pos to pos bins
+        % annotation('arrow',[0.238 0.275],[pos_y pos_y],'LineWidth',lwid) % pos bins to pos map
+        % annotation('arrow',[0.33 0.432],[pos_y pos_y],'LineWidth',lwid) % pos map to smoothed pos map
+        % annotation('line',[0.542 0.58],[pos_y pos_y],'LineWidth',lwid) % smoothed pos map to side   
+
+        spike_y = 0.280;        
+        annotation('arrow',[0.03 0.03],[pos_y spike_y],'LineWidth',lwid) % down side
+        annotation('arrow',[0.03 0.58],[spike_y spike_y],'LineWidth',lwid) % to spike plot         
+        % annotation('arrow',[0.03 0.06],[spike_y spike_y],'LineWidth',lwid) % to spike plot 
+        % annotation('arrow',[0.10 0.164],[spike_y spike_y],'LineWidth',lwid) % spikes to spike bins
+        % annotation('arrow',[0.225 0.275],[spike_y spike_y],'LineWidth',lwid) % spike bins to spike map
+        % annotation('arrow',[0.33 0.432],[spike_y spike_y],'LineWidth',lwid) % spike map to smoothed spike map
+        % annotation('line',[0.542 0.58],[spike_y spike_y],'LineWidth',lwid) % smoothed spike map to side
         annotation('line',[0.58 0.58],[spike_y 0.73],'LineWidth',lwid) % right side
-        annotation('arrow',[0.58 0.48],[0.73 0.73],'LineWidth',lwid) % right side to ratemap
-    
-        pos_y = 0.510;
-        annotation('arrow',[0.03 0.06],[pos_y pos_y],'LineWidth',lwid) % to pos plot 
-        annotation('arrow',[0.115 0.164],[pos_y pos_y],'LineWidth',lwid) % pos to pos bins
-        annotation('arrow',[0.217 0.275],[pos_y pos_y],'LineWidth',lwid) % pos bins to pos map
-        annotation('arrow',[0.318 0.432],[pos_y pos_y],'LineWidth',lwid) % pos map to smoothed pos map
-        annotation('line',[0.513 0.58],[pos_y pos_y],'LineWidth',lwid) % smoothed pos map to side    
+        annotation('arrow',[0.58 0.48],[0.73 0.73],'LineWidth',lwid) % right side to ratemap 
 
         % an2 = annotation('textbox','String',sprintf('rate =\nspike map / dwell map\n\\times sample interval'),'Position',[0.52 0.60 0.12 0.078],'EdgeColor','none','BackgroundColor','w','HorizontalAl','center'); 
-        an2 = annotation('textbox','String',sprintf('rate =\nspike map / dwell map'),'Position',[0.52 0.60 0.12 0.06],'EdgeColor','none','BackgroundColor','w','HorizontalAl','center'); 
+        an2 = annotation('textbox','String',sprintf('rate =\nspike map / dwell map'),'Position',[0.52 0.60 0.12 0.09],'EdgeColor','none','BackgroundColor','w','HorizontalAl','center','FontSize',font_siz); 
     
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% ################################################################# %% Save the figure
     % Save the figure    
     disp(sprintf('\tSaving figure...'))    
-    figname = [fig_dir2 '\' mname '_fig_meth.png'];
+    figname = [fig_dir2 '\Fig 2.png'];
     [~,~,~] = mkdir(fig_dir2);    
-    exportgraphics(gcf,figname,'BackgroundColor','w','ContentType','image','Resolution',250);  
+    exportgraphics(gcf,figname,'BackgroundColor','w','ContentType','image','Resolution',350);  
     close(gcf)        
     
     

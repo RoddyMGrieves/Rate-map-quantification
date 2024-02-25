@@ -36,7 +36,7 @@
     end
     
     ename = 'arena120cm';     
-    if ~exist('sdata','var') || 0
+    if ~exist('sdata','var') || 1
         sdir = [scratch_space '\' ename '_sigma16000_duration64_sdata.mat'];            
         disp(sprintf('\t\t...loading %s',sdir));            
         load(sdir,'sdata'); 
@@ -146,16 +146,16 @@
              
 %% #################### Ripley K plot
     xnow = 150;
-    ynow = ynow-290;
+    ynow = ynow-350;
     excell = 54;
-    ax1 = axes('Units','pixels','Position',[xnow ynow 220 150]);     
+    ax1 = axes('Units','pixels','Position',[xnow ynow 220 220]);     
         ah = add_panel_title('b',sprintf('Estimating field size'),'yoffset',0,'xoffset',0,'width',400);  
     
         fname = [scratch_space '\' ename '_histogram_field_sizes.mat'];
         if exist(fname,'file') && 1
             load(fname,'dat')   
         else
-            field_sizes_now = [config.analysis_pairs{:,1}];    
+            field_sizes_now = [4000 8000 16000];    
             dat = NaN(size(sdata,1),2,3);
             for ff = 1:length(field_sizes_now) 
                 mean_ssnow = field_sizes_now(ff);
@@ -165,17 +165,27 @@
                 dat(:,2,ff) = sdata.estimated_field_size(:,1);
             end  
             save(fname,'dat','-v7.3')           
-        end        
-        
-        s1 = scatter(dat(:,1,1),dat(:,2,1),10,cols(round(fs2(1)),:),'filled','Marker','o'); hold on;
-        s2 = scatter(dat(:,1,2),dat(:,2,2),10,cols(round(fs2(2)),:),'filled','Marker','o');     
-        s3 = scatter(dat(:,1,3),dat(:,2,3),10,cols(round(fs2(3)),:),'filled','Marker','o');     
-    
-        ax1.XLim = [0 320];
-        ax1.YLim = [0 320];
+        end      
+
+        dat(:,2,:) = dat(:,2,:).*1.5; % because H(r) was previously multiplied by 2, this is equivelent to multiplying by 0.75
+        dat_plot = dat;
+        dat_plot(:,2,:) = dat_plot(:,2,:) + normrnd(0,8,size(dat_plot(:,2,:)));
+        msiz = 20;
+        alph = 1;
+        max_val = max(dat_plot,[],"all",'omitmissing');        
+        cols = winter(3);
+        s1 = scatter(dat_plot(:,1,1),dat_plot(:,2,1),msiz,cols(1,:),'filled','Marker','o','MarkerFaceAlpha',alph); hold on;
+        s2 = scatter(dat_plot(:,1,2),dat_plot(:,2,2),msiz,cols(2,:),'filled','Marker','o','MarkerFaceAlpha',alph);     
+        s3 = scatter(dat_plot(:,1,3),dat_plot(:,2,3),msiz,cols(3,:),'filled','Marker','o','MarkerFaceAlpha',alph);     
+% keyboard
+        ax1.XLim = [0 max_val];
+        ax1.YLim = [0 max_val];
+        ax1.XTick = 0:50:max_val;
+        ax1.YTick = 0:50:max_val;
         xlabel('Actual field radius (mm)')
         ylabel('Estimated field radius (mm)')
         line([0 ax1.XLim],[0 ax1.YLim],'Color',[.5 .5 .5],'LineStyle','--')
+        grid on
     
         x = reshape(dat(:,1,:),[],1);
         y = reshape(dat(:,2,:),[],1);
@@ -184,22 +194,62 @@
         r.Color = 'k';
         r.LineStyle = '-';
 
-        text(1.04,0.91,sprintf('r = %.1f',corr(x,y,'rows','pairwise','type','Pearson')),'Units','normalized','FontSize',8)
-        text(1.04,1.05,sprintf('x = y'),'Units','normalized','FontSize',8)
+        [r,p] = corr(x,y,'rows','pairwise','type','Spearman');
+        text(1.04,0.85,sprintf('r = %.2f',corr(x,y,'rows','pairwise','type','Spearman')),'Units','normalized','FontSize',10,'HorizontalAlignment','left','VerticalAlignment','middle')
+        text(1.04,1,sprintf('x = y'),'Units','normalized','FontSize',10,'HorizontalAlignment','left','VerticalAlignment','middle')
         
-        keyboard
+        [~,leg] = legendflex([s1 s2 s3]...
+            ,{'Radius 1 (~126mm)','Radius 2 (~179mm)','Radius 3 (~253mm)'}...
+            ,'anchor',{'s','s'},'ncol',1,'box','off','buffer',[60,0],'xscale',1,'fontsize',9);   
+
+%% #################### Ripley K density plot
+    ax2 = axes('Units','pixels','Position',[ax1.Position(1)+350 ynow 220 220]);     
+        % ah = add_panel_title('b',sprintf('Estimating field size'),'yoffset',0,'xoffset',0,'width',400); 
+
+        bin_res = 512;
+        bs = linspace(0,max_val,bin_res);
+        [xx,yy] = ndgrid(bs,bs);
+
+        adat = [dat(:,1,1) dat(:,2,1); dat(:,1,2) dat(:,2,2); dat(:,1,3) dat(:,2,3)];
+        f = mvksdensity(adat,[yy(:) xx(:)],'BandWidth',25);
+        F = reshape(f,size(xx));
+    
+        imagesc('XData',xx(:),'YData',yy(:),'CData',F);
+        axis xy
+        daspect([1 1 1])
+        xlabel('Actual field radius (mm)')
+        ylabel('Estimated field radius (mm)')
+        ax2.XLim = [0 max_val];
+        ax2.YLim = [0 max_val];
+        ax2.XTick = 0:50:max_val;
+        ax2.YTick = 0:50:max_val;  
+        colormap(turbo);
+        line([ax2.XLim(1) ax2.XLim(2)],[ax2.YLim(1) ax2.YLim(2)],'Color',[.5 .5 .5]);
+
+        axc = axes('Units','pixels','Position',[ax2.Position(1)+ax2.Position(3)+10 ax2.Position(2)+0 12 ax2.Position(4)*0.8]); 
+            mat = linspace(ax2.CLim(1),ax2.CLim(2),100)';
+            imagesc(ones(size(mat)),mat,mat);
+            colormap(axc,ax2.Colormap);
+            axis xy
+
+            axc.YTick = ax2.CLim;
+            axc.YTickLabel = {'0','Max'};
+            axc.XTick = [];
+            axc.YAxisLocation = 'right';
+            text(0,1.05,sprintf('PDF'),'FontSize',8,'HorizontalAl','left','Units','normalized','VerticalAl','bottom') 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% ################################################################# %% Save the figure
     % Save the figure    
     disp(sprintf('\tSaving figure...'))    
-    figname1 = [fig_dir2 '\ripley_k.png'];
+    figname1 = [fig_dir2 '\S6_Fig.png'];
     print_qual = '-r250';
-    export_fig(figname1,'-png',print_qual)  % [top,right,bottom,left]
+    exportgraphics(gcf,figname1,'BackgroundColor','w','ContentType','image','Resolution',350);  
     close(gcf);
-        
-    
-    
-    
+
+
+
+
     
     
   

@@ -68,7 +68,7 @@
         
         for aa = 1:2
             psiz = 90;
-            buff = 95;
+            buff = 105;
             if aa==2
                 xnow = xnow+350;
             end
@@ -323,9 +323,9 @@
 %% ################################################################# %% Save the figure
     % Save the figure    
     disp(sprintf('\tSaving figure...'))    
-    figname = [fig_dir2 '\' mname '_fig_smoo.png'];
+    figname = [fig_dir2 '\S1_Fig.png'];
     [~,~,~] = mkdir(fig_dir2);    
-    exportgraphics(gcf,figname,'BackgroundColor','w','ContentType','image','Resolution',250);  
+    exportgraphics(gcf,figname,'BackgroundColor','w','ContentType','image','Resolution',350);  
     close(gcf) 
     
     

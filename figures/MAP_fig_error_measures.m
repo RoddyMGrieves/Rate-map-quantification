@@ -33,22 +33,22 @@
 %% ################################################################# %% FUNCTION BODY
 %% #################### Heatmap of error by binsize and smoothing
     % Figure settings
-    fig1 = figure('visible','on','Position',[50,60,1000,920]); 
+    fig1 = figure('visible','on','Position',[50,0,800,1000]); 
     set(gcf,'InvertHardCopy','off'); % this stops white lines being plotted black      
     set(gcf,'color','w'); % makes the background colour white
     colormap(jet(256)); % to make sure the colormap is not the horrible default one
 
     % method settings
     xnow = 80;
-    ynow = 760;
+    ynow = 740;
     mnames = {'histogram','ash','kadaptive','ksde','fyhn','kyadaptive'};    
     dnames = {'Histogram','ASH','Adaptive smoothing','KSDE','tKSDE','Adaptive binning'}; 
-    enames = {'MISE','Pearson','Euclidean'};
-    mapidx = [4 3 2];
+    enames = {'MISE',sprintf('Pearson'),'Euclidean','Mutual Information'};
+    mapidx = [4 3 2 1];
     xsiz = 100;
-    xbuff = 20;
+    xbuff = 10;
     ysiz = 100;
-    ybuff = 30;
+    ybuff = 20;
 
     xx = [xnow xnow+xsiz+xbuff xnow+xsiz*2+xbuff*2 xnow+xsiz*3+xbuff*3];
     yvec = ynow : -(ysiz+ybuff) : 0;
@@ -56,7 +56,7 @@
     % plot settings
     n_color_levels = 64;
     error_colormap = flipud(inferno(n_color_levels));    
-    clims = [1*10^-12 1*10^-11; 0.75 1; 0.001 0.01; 0.1 1];
+    clims = [1*10^-12 1*10^-11; 0.75 1; 0.001 0.01; 0.25 1];
     interp_method = 'nearest';  
 
     sols = NaN(length(mnames),2,2,3);
@@ -74,14 +74,14 @@
             ax1 = axes('Units','pixels','Position',[xx(ee) yvec(mm) xsiz ysiz]);  
                 disp(sprintf('\t\t...errormap'))
 
-                load([scratch_space '\' ename '_' mname '_sigma' num2str(sigma_now) '_duration' num2str(time_now) 'normal_datamats.mat'],'data_matrix_error','data_matrix_params')  
+                load([scratch_space '\' ename '_' mname '_sigma' num2str(sigma_now) '_duration' num2str(time_now) 'errors_datamats.mat'],'data_matrix_error','data_matrix_params')  
                 bmat = data_matrix_params(:,:,1); % binsizes used when generating maps
                 smat = data_matrix_params(:,:,2); % smoothing used when generating maps 
     
                 if mm==1 && ee==1
-                    ah = add_panel_title('',sprintf(dnames{mm}),'yoffset',-15,'xoffset',0,'width',400);
+                    ah = add_panel_title('',sprintf(dnames{mm}),'yoffset',-18,'xoffset',0,'width',400);
                 elseif mm>1 && ee==1
-                    ah = add_panel_title('',sprintf(dnames{mm}),'yoffset',-15,'xoffset',0,'width',400);
+                    ah = add_panel_title('',sprintf(dnames{mm}),'yoffset',-18,'xoffset',0,'width',400);
                 end
 
                 switch mname
@@ -186,14 +186,14 @@
                 end
 
 %% #################### calculate Pareto front
-            fname = [scratch_space '\' ename '_' mname '_sigma' num2str(sigma_now) '_duration' num2str(time_now) 'normal_mapidx' num2str(mapidx(ee)) '_gamultiobj.mat'];
+            fname = [scratch_space '\' ename '_' mname '_sigma' num2str(sigma_now) '_duration' num2str(time_now) 'errors_mapidx' num2str(mapidx(ee)) '_gamultiobj.mat'];
             if 1
                 disp(sprintf('\t\t...pareto front'))
 
                 if exist(fname,'file') && 1 && ~override_pareto
                     % do nothing
                 else
-                    load([scratch_space '\' ename '_' mname '_sigma' num2str(sigma_now) '_duration' num2str(time_now) 'normal_datamats.mat'],'data_matrix_cputime','data_matrix_fields','data_matrix_error','data_matrix_missing','data_matrix_params')   
+                    load([scratch_space '\' ename '_' mname '_sigma' num2str(sigma_now) '_duration' num2str(time_now) 'errors_datamats.mat'],'data_matrix_cputime','data_matrix_fields','data_matrix_error','data_matrix_missing','data_matrix_params')   
                 
                     disp(sprintf('\t\t\t...calculating'))
                     
@@ -282,7 +282,7 @@
 
 %% #################### colorbar
             if mm==length(mnames)
-                axc = axes('Units','pixels','Position',[ax1.Position(1) ax1.Position(2)-65 ax1.Position(3) 10]); 
+                axc = axes('Units','pixels','Position',[ax1.Position(1)+10 ax1.Position(2)-65 ax1.Position(3)-10 10]); 
                     mat = linspace(ax1.CLim(1),ax1.CLim(2),100);
                     imagesc([ax1.CLim(1),ax1.CLim(2)],[1 1],mat);
                     colormap(axc,ax1.Colormap);
@@ -291,13 +291,13 @@
                     axc.XTick = linspace(ax1.CLim(1),ax1.CLim(2),4);
                     axc.YTick = [];
                     axc.XAxisLocation = 'bottom';
-                    text(0.5,1.5,sprintf(enames{ee}),'FontSize',8,'HorizontalAl','center','Units','normalized')
+                    text(0.5,1.7,sprintf(enames{ee}),'FontSize',8,'HorizontalAl','center','Units','normalized')
             end  
         end        
     end
 
 %% #################### Differences in binsize and smoothing
-    xnow = 510;
+    xnow = 590;
     ynow = 700;
     jit = 0.05;        
     ax1 = axes('Units','pixels','Position',[xnow ynow 160 130]);  
@@ -311,19 +311,19 @@
         for jj = 1:6
             y = (bal_bin(jj,:) - bal_bin(jj,1))./(bal_bin(jj,:) + bal_bin(jj,1));
             bal_bin_y = [bal_bin_y;y];
-            plot((2:3)+normrnd(0,jit,[1 2]),y(2:3),'Color',cols(jj,:),'Marker','o'); hold on;
+            plot((2:4)+normrnd(0,jit,[1 3]),y(2:4),'Color',cols(jj,:),'Marker','o'); hold on;
         end
 
         % ax1.YScale = 'log';
         ax1.YLim = [-1 1];
         ax1.XTick = [];
         ylabel(sprintf('Balanced bin size (mm)\n(a-b)/(a+b)'))
-        ax1.XLim = [1.5 3.5];
+        ax1.XLim = [1.5 4.5];
         text(0,1.15,'Balanced solution bin size','Units','normalized','FontSize',10)
         line(ax1.XLim,[0 0],'Color',[.5 .5 .5])
         box off
 
-        for jj = 2:3
+        for jj = 2:4
             [H,P,CI] = ttest(bal_bin_y(:,jj),0);
             if P<=.05
                 text(jj,ax1.YLim(2).*0.95,'*','FontSize',15,'HorizontalAl','center')
@@ -337,18 +337,18 @@
         for jj = 1:6
             y = (bal_smoo(jj,:) - bal_smoo(jj,1))./(bal_smoo(jj,:) + bal_smoo(jj,1));
             bal_smoo_y = [bal_smoo_y;y];            
-            plot((2:3)+normrnd(0,jit,[1 2]),y(2:3),'Color',cols(jj,:),'Marker','o'); hold on;
+            plot((2:4)+normrnd(0,jit,[1 3]),y(2:4),'Color',cols(jj,:),'Marker','o'); hold on;
         end
 
         ax2.YLim = ax1.YLim;
         ax2.XTick = [];
         ylabel(sprintf('Balanced smoothing (mm)\n(a-b)/(a+b)'))
-        ax2.XLim = [1.5 3.5];
+        ax2.XLim = [1.5 4.5];
         text(0,1.15,'Balanced solution smoothing','Units','normalized','FontSize',10)
         line(ax1.XLim,[0 0],'Color',[.5 .5 .5])
         box off
 
-        for jj = 2:3
+        for jj = 2:4
             [H,P,CI] = ttest(bal_smoo_y(:,jj),0);
             if P<=.05
                 text(jj,ax1.YLim(2).*0.95,'*','FontSize',15,'HorizontalAl','center')
@@ -367,19 +367,19 @@
         for jj = 1:6
             y = (min_bin(jj,:) - min_bin(jj,1))./(min_bin(jj,:) + min_bin(jj,1));
             min_bin_y = [min_bin_y;y];                        
-            plot((2:3)+normrnd(0,jit,[1 2]),y(2:3),'Color',cols(jj,:),'Marker','o'); hold on;
+            plot((2:4)+normrnd(0,jit,[1 3]),y(2:4),'Color',cols(jj,:),'Marker','o'); hold on;
         end
 
         ax3.YLim = ax1.YLim;        
         % ax3.YScale = 'log';
         ax3.XTick = [];
         ylabel(sprintf('Minimum bin size (mm)\n(a-b)/(a+b)'))
-        ax3.XLim = [1.5 3.5];
+        ax3.XLim = [1.5 4.5];
         text(0,1.15,'Minimum solution bin size','Units','normalized','FontSize',10)
         line(ax1.XLim,[0 0],'Color',[.5 .5 .5])
         box off
 
-        for jj = 2:3
+        for jj = 2:4
             [H,P,CI] = ttest(min_bin_y(:,jj),0);
             if P<=.05
                 text(jj,ax1.YLim(2).*0.95,'*','FontSize',15,'HorizontalAl','center')
@@ -395,20 +395,20 @@
         for jj = 1:6
             y = (min_smoo(jj,:) - min_smoo(jj,1))./(min_smoo(jj,:) + min_smoo(jj,1));
             min_smoo_y = [min_smoo_y;y];                                    
-            ps(jj) = plot((2:3)+normrnd(0,jit,[1 2]),y(2:3),'Color',cols(jj,:),'Marker','o'); hold on;
+            ps(jj) = plot((2:4)+normrnd(0,jit,[1 3]),y(2:4),'Color',cols(jj,:),'Marker','o'); hold on;
         end
 
         ax4.YLim = ax1.YLim;        
         % ax4.YScale = 'log';
-        ax4.XTick = 1:3;
+        ax4.XTick = 1:4;
         ax4.XTickLabel = enames;
         ylabel(sprintf('Minimum smoothing (mm)\n(a-b)/(a+b)'))
-        ax4.XLim = [1.5 3.5];
+        ax4.XLim = [1.5 4.5];
         text(0,1.15,'Minimum solution smoothing','Units','normalized','FontSize',10)
         line(ax1.XLim,[0 0],'Color',[.5 .5 .5])
         box off
 
-        for jj = 2:3
+        for jj = 2:4
             [H,P,CI] = ttest(min_smoo_y(:,jj),0);
             if P<=.05
                 text(jj,ax1.YLim(2).*0.95,'*','FontSize',15,'HorizontalAl','center')
@@ -424,9 +424,9 @@
 %% ################################################################# %% Save the figure
     % Save the figure    
     disp(sprintf('\tSaving figure...'))    
-    figname = [fig_dir2 '\fig_error_measures.png'];
+    figname = [fig_dir2 '\S5_Fig.png'];
     [~,~,~] = mkdir(fig_dir2);    
-    exportgraphics(fig1,figname,'BackgroundColor','w','ContentType','image','Resolution',250);  
+    exportgraphics(fig1,figname,'BackgroundColor','w','ContentType','image','Resolution',350);  
     close(fig1)    
     
     

@@ -111,7 +111,7 @@
 
         % main panel showing 16 minute error results
         ax1 = axes('Units','pixels','Position',[xnow+50 ynow+100 550 200]);    
-            ah = add_panel_title('a',sprintf('Reported bin sizes over time'),'yoffset',10,'xoffset',-50,'width',400);
+            ah = add_panel_title('A',sprintf('Reported bin sizes over time'),'yoffset',10,'xoffset',-50,'width',400);
             zidx = dat(:,3)>0;        
             msiz = 80;
 
@@ -205,10 +205,14 @@
             spk = [pspx pspy]; % spikes in mm
         
             ax = axes('Units','pixels','Position',[xvec(1) ynow psiz psiz]);    
-                plot(ppox,ppoy,'Color',[.5 .5 .5 .5]); hold on;
-                scatter(pspx,pspy,20,'r','filled','MarkerEdgeColor','none','MarkerFaceAlpha',0.5);
+                p1 = plot(ppox,ppoy,'Color',[.5 .5 .5 .5]); hold on;
+                s1 = scatter(pspx,pspy,20,'r','filled','MarkerEdgeColor','none','MarkerFaceAlpha',0.5);
                 daspect([1 1 1])
                 axis xy off  
+
+                [~,leg] = legendflex([p1 s1]...
+                    ,{'trajectory','spikes'}...
+                    ,'anchor',{'s','s'},'ncol',1,'box','off','buffer',[-30,-45],'xscale',1,'fontsize',font_siz); 
 
             loopout = looper(length(excell));     
             for xx = 1:3
@@ -302,7 +306,7 @@
         mname = ms{ii};
         ax1 = axes('Units','pixels','Position',[xvec(ii) ynow-5 xsiz ysiz]);    
             if ii==1
-                ah = add_panel_title('b',sprintf('Reported bin size and smoothing combinations'),'yoffset',35,'xoffset',-30,'width',400);
+                ah = add_panel_title('B',sprintf('Reported bin size and smoothing combinations'),'yoffset',35,'xoffset',-30,'width',400);
             end
             sigma_now = '4000';  
             time_now = '16';                        
@@ -433,7 +437,18 @@
                     ax1b.XTick = [];      
                     view(0,90)
             end
-
+            if ii==3
+                axc = axes('Units','pixels','Position',[ax1.Position(1)-0 ax1.Position(2)+250 ax1.Position(3) 10]); 
+                    mat = linspace(ax1.CLim(1),ax1.CLim(2),100);
+                    imagesc('YData',ones(size(mat)),'XData',mat,'CData',mat,'alphadata',ones(size(mat)).*transp);
+                    colormap(axc,error_colormap);
+                    axis xy
+    
+                    axc.YTick = [];
+                    axc.XTickLabelRotation = 0; 
+                    axc.XLim = ax1.CLim;
+                    text(0.5,1.7,'Map error (MISE)','FontSize',8,'HorizontalAl','center','Units','normalized')  
+            end
     end
 
 % return
@@ -441,9 +456,9 @@
 %% ################################################################# %% Save the figure
     % Save the figure    
     disp(sprintf('\tSaving figure...'))    
-    figname = [fig_dir2 '\v2_fig_lit_review.png'];
+    figname = [fig_dir2 '\Fig 11.png'];
     [~,~,~] = mkdir(fig_dir2);    
-    exportgraphics(fig1,figname,'BackgroundColor','w','ContentType','image','Resolution',250);  
+    exportgraphics(fig1,figname,'BackgroundColor','w','ContentType','image','Resolution',350);  
     close(fig1)    
    
     

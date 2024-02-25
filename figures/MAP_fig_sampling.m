@@ -320,7 +320,7 @@ nmes = {'Uniform','Goal','Thigmotaxis'};
     xnow = 70;
     ynow = 700;
     ax1 = axes('Units','pixels','Position',[xnow-20 ynow 120 120]);  
-        ah = add_panel_title('a',sprintf('Bin size, smoothing & overdispersion'),'yoffset',10,'xoffset',-5,'width',300);                    
+        ah = add_panel_title('a',sprintf('Different trajectory types'),'yoffset',10,'xoffset',-5,'width',300);                    
             % sdir = [scratch_space '\' ename '_sigma16000_duration64' bias_names{1} '_sdata.mat'];            
             % disp(sprintf('\t\t...loading %s',sdir));            
             % load(sdir,'sdata'); 
@@ -349,7 +349,7 @@ nmes = {'Uniform','Goal','Thigmotaxis'};
             pos = [ppox ppoy]; % positions in mm
             % spk = [pspx pspy]; % spikes in mm
 
-            plot(ppox,ppoy,'k'); hold on;
+            p1 = plot(ppox,ppoy,'k'); hold on;
             % plot(pspx,pspy,'r.','MarkerSize',20);
             daspect([1 1 1])
             axis xy off
@@ -447,11 +447,15 @@ nmes = {'Uniform','Goal','Thigmotaxis'};
             pos = [ppox ppoy]; % positions in mm
             % spk = [pspx pspy]; % spikes in mm
 
-            plot(ppox,ppoy,'k'); hold on;
+            p1 = plot(ppox,ppoy,'k'); hold on;
             % plot(pspx,pspy,'r.','MarkerSize',20);
             daspect([1 1 1])
             axis xy off
             text(0,1.1,sprintf(nmes{3}),'Units','normalized','HorizontalAlignment','left','FontSize',10)
+
+            [~,leg] = legendflex([p1]...
+                ,{'trajectory'}...
+                ,'anchor',{'n','n'},'ncol',1,'box','off','buffer',[0,40],'xscale',0.25,'fontsize',8); 
 
     ax_dwell = axes('Units','pixels','Position',[ax1.Position(1) ynow-130 ax1.Position(3) ax1.Position(4)]);  
             rmset = mapset; % rate mapper settings structure - passing mapset directly to ratemapper causes a memory leak
@@ -476,14 +480,14 @@ nmes = {'Uniform','Goal','Thigmotaxis'};
         axc.YTickLabel = {'0','Max'};
         axc.XTick = [];
         axc.YAxisLocation = 'right';
-        text(0.5,1.2,sprintf('Time'),'FontSize',8,'HorizontalAl','center','Units','normalized')
+        text(0.5,1.1,sprintf('Time'),'FontSize',8,'HorizontalAl','center','Units','normalized')
 
 
 %% #################### Differences in binsize and smoothing
     xnow = 80;
     ynow = ynow-330;
     ax1 = axes('Units','pixels','Position',[xnow ynow 140 130]);  
-        ah = add_panel_title('c',sprintf('Bin size, smoothing & overdispersion'),'yoffset',15,'xoffset',-30,'width',300);                    
+        ah = add_panel_title('c',sprintf('Effect of trajectory type on bin size and smoothing'),'yoffset',15,'xoffset',-30,'width',300);                    
 
         b1 = sols(:,1,1,1); % binsize, balanced, normal
         b2 = sols(:,1,1,2); % binsize, balanced, biased
@@ -677,7 +681,7 @@ nmes = {'Uniform','Goal','Thigmotaxis'};
 
     % error results
     ax3 = axes('Units','pixels','Position',[ax1.Position(1) ynow ax1.Position(3) ax1.Position(4)]); 
-        ah = add_panel_title('d',sprintf('MISE, field detection & dispersion'),'yoffset',5,'xoffset',-30,'width',300);                    
+        ah = add_panel_title('d',sprintf('MISE, field detection & trajectory type'),'yoffset',5,'xoffset',-30,'width',300);                    
    
         % plot results
         dispersion = [1 2 3];
@@ -744,9 +748,9 @@ nmes = {'Uniform','Goal','Thigmotaxis'};
 %% ################################################################# %% Save the figure
     % Save the figure    
     disp(sprintf('\tSaving figure...'))    
-    figname = [fig_dir2 '\v2_fig_sampling.png'];
+    figname = [fig_dir2 '\S8_Fig.png'];
     [~,~,~] = mkdir(fig_dir2);    
-    exportgraphics(fig1,figname,'BackgroundColor','w','ContentType','image','Resolution',250);  
+    exportgraphics(fig1,figname,'BackgroundColor','w','ContentType','image','Resolution',350);  
     close(fig1)    
     
     

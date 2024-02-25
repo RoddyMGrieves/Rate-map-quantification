@@ -46,6 +46,7 @@
     override_pareto = 0;
     override_maps = 0;
     rmap_colormap = 'turbo';
+    font_siz = 12;
 
 %% ##################################### Heading 2
 %% #################### Heading 3
@@ -79,7 +80,7 @@
         axis xy off tight
         colormap(gca,rmap_colormap)
 
-        ah = add_panel_title('a',sprintf('Spike probability map'),'yoffset',-5,'xoffset',0,'width',300,'fontsize',tfonts);    
+        ah = add_panel_title('A',sprintf('Spike probability map'),'yoffset',-5,'xoffset',0,'width',300,'fontsize',tfonts);    
 
         % colorbar
         axc = axes('Units','pixels','Position',[ax1.Position(1)+150 ax1.Position(2)+20 12 ax1.Position(4)-20],'FontSize',fsiz);
@@ -121,12 +122,16 @@
     spk = [pspx pspy]; % spikes in mm
 
     ax1 = axes('Units','pixels','Position',[xvec(2) yvec(1) siz siz],'Color','none','Clipping','off');         
-        plot(ppox,ppoy,'Color',[.5 .5 .5 .5]); hold on;
-        scatter(pspx,pspy,20,'r','filled','MarkerEdgeColor','none','MarkerFaceAlpha',0.5);
+        p1 = plot(ppox,ppoy,'Color',[.5 .5 .5 .5]); hold on;
+        s1 = scatter(pspx,pspy,20,'r','filled','MarkerEdgeColor','none','MarkerFaceAlpha',0.5);
         daspect([1 1 1])
         axis xy off  
 
-        ah = add_panel_title('b',sprintf('Positions and spikes'),'yoffset',-5,'xoffset',10,'width',300,'fontsize',tfonts);    
+        ah = add_panel_title('B',sprintf('Positions and spikes'),'yoffset',-5,'xoffset',10,'width',300,'fontsize',tfonts);    
+
+        [~,leg] = legendflex([p1 s1]...
+            ,{'trajectory','spikes'}...
+            ,'anchor',{'e','e'},'ncol',1,'box','off','buffer',[120,0],'xscale',1,'fontsize',font_siz); 
 
 %% #################### Heatmap of error by binsize and smoothing
     % method settings
@@ -134,7 +139,7 @@
     ynow = ynow-100;
     mnames = {'histogram','ash','kadaptive','ksde','fyhn','kyadaptive'};
     dnames = {'Histogram','Averaged Shifted Histogram (ASH)','Adaptive Smoothing','Kernel Smoothed Density Estimate (KSDE)','Temporal KSDE','Adaptive Binning'}; 
-    ls = {'c','d','e','f','g','h','i'};
+    ls = {'C','D','E','F','G','H','I'};
     mapidx = 4;
     xsiz = 200;
     xbuff = 200;
@@ -294,9 +299,9 @@
 %% ################################################################# %% Save the figure
     % Save the figure    
     disp(sprintf('\tSaving figure...'))    
-    figname = [fig_dir2 '\v2_fig_setting_maps.png'];
+    figname = [fig_dir2 '\Fig 6.png'];
     [~,~,~] = mkdir(fig_dir2);    
-    exportgraphics(fig1,figname,'BackgroundColor','w','ContentType','image','Resolution',250);  
+    exportgraphics(fig1,figname,'BackgroundColor','w','ContentType','image','Resolution',350);  
     close(fig1)    
     
     

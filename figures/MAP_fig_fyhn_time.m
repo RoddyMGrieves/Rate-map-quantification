@@ -249,9 +249,9 @@
 %% ################################################################# %% Save the figure
     % Save the figure    
     disp(sprintf('\tSaving figure...'))    
-    figname = [fig_dir2 '\' mname '_fig_time.png'];
+    figname = [fig_dir2 '\S4_Fig.png'];
     [~,~,~] = mkdir(fig_dir2);    
-    exportgraphics(gcf,figname,'BackgroundColor','w','ContentType','image','Resolution',250);  
+    exportgraphics(gcf,figname,'BackgroundColor','w','ContentType','image','Resolution',350);  
     close(gcf) 
     
     

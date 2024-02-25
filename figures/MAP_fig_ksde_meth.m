@@ -35,16 +35,17 @@
         all_pos(ww,1) = {[pox(:) poy(:) pot(:)]};
     end
     
-    if ~exist('sdata','var')
+    % if ~exist('sdata','var')
         sdir = [scratch_space '\' config.environs{1} '_sigma8000_duration64_sdata.mat'];            
         disp(sprintf('\t\t...loading %s',sdir));            
         load(sdir,'sdata'); 
-    end
+    % end
 
     ename = 'arena120cm'; 
     mname = 'ksde';
     fmap_colormap = 'turbo';
     other_colormap = 'hot';
+    font_siz = 12;
     
 %% ##################################### Heading 2
 %% #################### Heading 3
@@ -88,11 +89,11 @@
         daspect([1 1 1])
         axis xy off  
         text_offset = 1.07;
-        text(0,text_offset,'16 minute session','Units','normalized','FontSize',8,'HorizontalAl','left');
+        text(0,text_offset,'16 minute session','Units','normalized','FontSize',font_siz+2,'HorizontalAl','left');
 
         [~,leg] = legendflex([p1 s1]...
             ,{'positions','spikes'}...
-            ,'anchor',{'s','s'},'ncol',1,'box','off','buffer',[-30,-40],'xscale',1,'fontsize',9); 
+            ,'anchor',{'s','s'},'ncol',1,'box','off','buffer',[-30,-45],'xscale',1,'fontsize',font_siz); 
 
     % create ratemap
     rmset = mapset; % rate mapper settings structure - passing mapset directly to ratemapper causes a memory leak
@@ -119,7 +120,7 @@
         [Xq,Yq] = meshgrid(movmean(map_grid(:,1),2,'EndPoints','discard'),movmean(map_grid(:,2),2,'EndPoints','discard'));
         scatter(Xq,Yq,5,'b','filled','MarkerEdgeColor','none','MarkerFaceAlpha',0.5); hold on;
 
-        text(0,text_offset,sprintf('All query points'),'Units','normalized','FontSize',8,'HorizontalAl','left')
+        text(0,text_offset,sprintf('All query points'),'Units','normalized','FontSize',font_siz,'HorizontalAl','left')
         ax2.XLim = [min(map_grid(:,1)) max(map_grid(:,1))];
         ax2.YLim = [min(map_grid(:,2)) max(map_grid(:,2))];  
         
@@ -132,7 +133,7 @@
         daspect([1 1 1])
         axis xy off  
 
-        text(0,text_offset,sprintf('Example query point'),'Units','normalized','FontSize',8,'HorizontalAl','left')
+        text(0,text_offset,sprintf('Example query point'),'Units','normalized','FontSize',font_siz,'HorizontalAl','left')
         ax6.XLim = ax2.XLim;
         ax6.YLim = ax2.YLim;
 
@@ -163,7 +164,7 @@
         ax7.YLim = ax2.YLim;    
         scatter(Xq(exbin),Yq(exbin),8,'b','filled','MarkerEdgeColor','none','MarkerFaceAlpha',1); hold on;
         plot(Xq(exbin),Yq(exbin),'ko','MarkerSize',10)        
-        text(0,1.12,sprintf('Kernel weighted distance\nto all positions'),'Units','normalized','FontSize',8,'HorizontalAl','left')
+        text(0,1.12,sprintf('Kernel weighted distance\nto all positions'),'Units','normalized','FontSize',font_siz,'HorizontalAl','left')
         
         text(1.25,0.5,sprintf('For every\nquery point\n%c(distances)',931),'HorizontalAl','center','FontSize',8,'Units','normalized')        
         
@@ -184,7 +185,7 @@
         ax8.YLim = ax2.YLim;
         scatter(Xq(exbin),Yq(exbin),8,'b','filled','MarkerEdgeColor','none','MarkerFaceAlpha',1); hold on;
         plot(Xq(exbin),Yq(exbin),'ko','MarkerSize',10)        
-        text(0,1.12,sprintf('Kernel weighted distance\nto all spikes'),'Units','normalized','FontSize',8,'HorizontalAl','left')
+        text(0,1.12,sprintf('Kernel weighted distance\nto all spikes'),'Units','normalized','FontSize',font_siz,'HorizontalAl','left')
               
         text(1.25,0.5,sprintf('For every\nquery point\n%c(distances)',931),'HorizontalAl','center','FontSize',8,'Units','normalized')        
         
@@ -197,7 +198,7 @@
         view(0,90)
         ax10.XLim = ax2.XLim;
         ax10.YLim = ax2.YLim;
-        text(0,text_offset,sprintf('KSDE of positions'),'Units','normalized','FontSize',8,'HorizontalAl','left')
+        text(0,text_offset,sprintf('KSDE of positions'),'Units','normalized','FontSize',font_siz,'HorizontalAl','left')
         colormap(ax10,other_colormap)
         
         axc = axes('Units','pixels','Position',[ax10.Position(1)+ax10.Position(3)+10 ax10.Position(2)+0 12 ax10.Position(4)*0.9]); 
@@ -220,7 +221,7 @@
         view(0,90)
         ax11.XLim = ax2.XLim;
         ax11.YLim = ax2.YLim;    
-        text(0,text_offset,sprintf('KSDE of spikes'),'Units','normalized','FontSize',8,'HorizontalAl','left')
+        text(0,text_offset,sprintf('KSDE of spikes'),'Units','normalized','FontSize',font_siz,'HorizontalAl','left')
         colormap(ax11,other_colormap)
 
     % ratemap
@@ -232,7 +233,7 @@
         ax12.XLim = ax2.XLim;
         ax12.YLim = ax2.YLim;     
         ax12.CLim(1) = 0;        
-        text(0,text_offset,sprintf('Firing rate map'),'Units','normalized','FontSize',8,'HorizontalAl','left')
+        text(0,text_offset,sprintf('Firing rate map'),'Units','normalized','FontSize',font_siz+2,'HorizontalAl','left')
         colormap(ax12,fmap_colormap)
     
         axc = axes('Units','pixels','Position',[ax12.Position(1)+ax12.Position(3)+10 ax12.Position(2)+0 12 ax12.Position(4)*0.9]); 
@@ -250,30 +251,34 @@
         lwid = 1.3;
         annotation('line',[0.042 0.10],[0.73 0.73],'LineWidth',lwid) % to position/spike plot
         
-        pos_y = 0.510;
-        annotation('line',[0.042 0.042],[0.73 pos_y],'LineWidth',lwid) % left side
-        annotation('arrow',[0.042 0.054],[pos_y pos_y],'LineWidth',lwid); % to pos query points 
-        annotation('arrow',[0.115 0.166],[pos_y pos_y],'LineWidth',lwid) % pos query points to example radii
-        annotation('arrow',[0.248 0.2935],[pos_y pos_y],'LineWidth',lwid); % example query point to pos dists
-        annotation('line',[0.279 0.279],[pos_y 0.18],'LineWidth',lwid); % line down to spike dists
-        annotation('arrow',[0.279 0.2935],[0.18 0.18],'LineWidth',lwid); % example query point to pos dists
-        annotation('arrow',[0.36 0.445],[pos_y pos_y],'LineWidth',lwid) % pos dists to dwellmap
-        annotation('arrow',[0.36 0.445],[0.26 0.26],'LineWidth',lwid) % spike dists to spikemap
+        pos_y = 0.550;
+        annotation('arrow',[0.042 0.042],[0.73 pos_y],'LineWidth',lwid) % left side
+        annotation('arrow',[0.042 0.59],[pos_y pos_y],'LineWidth',lwid); % to pos query points 
+        spike_y = 0.30;
+        annotation('arrow',[0.285 0.59],[spike_y spike_y],'LineWidth',lwid); % spikes    
+        annotation('arrow',[0.285 0.285],[pos_y spike_y],'LineWidth',lwid); % spikes                         
+        % annotation('arrow',[0.042 0.054],[pos_y pos_y],'LineWidth',lwid); % to pos query points 
+        % annotation('arrow',[0.115 0.166],[pos_y pos_y],'LineWidth',lwid) % pos query points to example radii
+        % annotation('arrow',[0.248 0.2935],[pos_y pos_y],'LineWidth',lwid); % example query point to pos dists
+        % annotation('line',[0.279 0.279],[pos_y 0.18],'LineWidth',lwid); % line down to spike dists
+        % annotation('arrow',[0.279 0.2935],[0.18 0.18],'LineWidth',lwid); % example query point to pos dists
+        % annotation('arrow',[0.36 0.445],[pos_y pos_y],'LineWidth',lwid) % pos dists to dwellmap
+        % annotation('arrow',[0.36 0.445],[0.26 0.26],'LineWidth',lwid) % spike dists to spikemap
         annotation('line',[0.518 0.59],[pos_y pos_y],'LineWidth',lwid) % dwellmap to right side
-        annotation('line',[0.518 0.59],[0.26 0.26],'LineWidth',lwid) % spikemap to right side
-        annotation('line',[0.59 0.59],[0.26 0.73],'LineWidth',lwid) % right side                
+        % annotation('line',[0.518 0.59],[0.26 0.26],'LineWidth',lwid) % spikemap to right side
+        annotation('line',[0.59 0.59],[spike_y 0.73],'LineWidth',lwid) % right side                
         annotation('arrow',[0.59 0.48],[0.73 0.73],'LineWidth',lwid) % right side to ratemap
 
 %         delete(an2)
-        an2 = annotation('textbox','String',sprintf('For each query point:\nrate = spike KSDE / pos KSDE\n\\times sample interval'),'Position',[0.54 0.52 0.1 0.1],'EdgeColor','none','BackgroundColor','w','HorizontalAl','center');         
-                
+        an2 = annotation('textbox','String',sprintf('For each query point:\nrate = spike KSDE / pos KSDE\n\\times sample interval'),'Position',[0.54 0.57 0.1 0.1],'EdgeColor','none','BackgroundColor','w','HorizontalAl','center','FontSize',font_siz);         
+% return      
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% ################################################################# %% Save the figure
     % Save the figure    
     disp(sprintf('\tSaving figure...'))    
-    figname = [fig_dir2 '\' mname '_fig_meth.png'];
+    figname = [fig_dir2 '\Fig 5.png'];
     [~,~,~] = mkdir(fig_dir2);    
-    exportgraphics(gcf,figname,'BackgroundColor','w','ContentType','image','Resolution',250);  
+    exportgraphics(gcf,figname,'BackgroundColor','w','ContentType','image','Resolution',350);  
     close(gcf)    
     
     

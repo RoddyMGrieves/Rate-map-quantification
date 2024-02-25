@@ -316,8 +316,8 @@ yvec = ynow : -(ysiz+ybuff) : 0;
 %% #################### Example overdispersion
     xnow = 70;
     ynow = 680;
-    ax1 = axes('Units','pixels','Position',[xnow ynow 160 160]);  
-        ah = add_panel_title('a',sprintf('Bin size, smoothing & overdispersion'),'yoffset',10,'xoffset',-25,'width',300);                    
+    ax1 = axes('Units','pixels','Position',[xnow-30 ynow 160 160]);  
+        ah = add_panel_title('a',sprintf('Bin size, smoothing & overdispersion'),'yoffset',10,'xoffset',5,'width',300);                    
 
             sdir = [scratch_space '\' ename '_sigma16000_duration64' ovals{1} '_sdata.mat'];            
             disp(sprintf('\t\t...loading %s',sdir));            
@@ -348,13 +348,17 @@ yvec = ynow : -(ysiz+ybuff) : 0;
             pos = [ppox ppoy]; % positions in mm
             spk = [pspx pspy]; % spikes in mm
 
-            plot(ppox,ppoy,'k'); hold on;
-            plot(pspx,pspy,'r.','MarkerSize',20);
+            p1 = plot(ppox,ppoy,'k'); hold on;
+            s1 = plot(pspx,pspy,'r.','MarkerSize',20);
             daspect([1 1 1])
             axis xy off
             text(0,1.1,sprintf(nmes{1}),'Units','normalized','HorizontalAlignment','left','FontSize',10)
 
-        ax1b = axes('Units','pixels','Position',[ax1.Position(1) ax1.Position(2)-90 120 60]); % inset
+            [~,leg] = legendflex([p1 s1]...
+                ,{'trajectory','spikes'}...
+                ,'anchor',{'e','e'},'ncol',1,'box','off','buffer',[65,0],'xscale',0.25,'fontsize',8); 
+
+        ax1b = axes('Units','pixels','Position',[ax1.Position(1)+20 ax1.Position(2)-90 120 60]); % inset
             tcut = 64*60;
             ppox = pox(pot<tcut);
             ppoy = poy(pot<tcut);
@@ -390,7 +394,7 @@ yvec = ynow : -(ysiz+ybuff) : 0;
             ax1b.XLim = [-8 8];
             text(0.1,1.15,sprintf('%c = %.2f',963,overdispersion),'Units','normalized','HorizontalAlignment','left','FontSize',10)
 
-    ax1 = axes('Units','pixels','Position',[ax1b.Position(1)+210 ynow 160 160]);  
+    ax1 = axes('Units','pixels','Position',[ax1b.Position(1)+230 ynow 160 160]);  
             sdir = [scratch_space '\' ename '_sigma16000_duration64' ovals{2} '_sdata.mat'];            
             disp(sprintf('\t\t...loading %s',sdir));            
             load(sdir,'sdata'); 
@@ -426,7 +430,7 @@ yvec = ynow : -(ysiz+ybuff) : 0;
             axis xy off
             text(0,1.1,sprintf(nmes{2}),'Units','normalized','HorizontalAlignment','left','FontSize',10)
 
-        ax1b = axes('Units','pixels','Position',[ax1.Position(1) ax1.Position(2)-90 120 60]); % inset
+        ax1b = axes('Units','pixels','Position',[ax1.Position(1)+20 ax1.Position(2)-90 120 60]); % inset
             tcut = 64*60;
             ppox = pox(pot<tcut);
             ppoy = poy(pot<tcut);
@@ -682,9 +686,9 @@ yvec = ynow : -(ysiz+ybuff) : 0;
 %% ################################################################# %% Save the figure
     % Save the figure    
     disp(sprintf('\tSaving figure...'))    
-    figname = [fig_dir2 '\v2_fig_overdispersion.png'];
+    figname = [fig_dir2 '\S7_Fig.png'];
     [~,~,~] = mkdir(fig_dir2);    
-    exportgraphics(fig1,figname,'BackgroundColor','w','ContentType','image','Resolution',250);  
+    exportgraphics(fig1,figname,'BackgroundColor','w','ContentType','image','Resolution',350);  
     close(fig1)    
     
     

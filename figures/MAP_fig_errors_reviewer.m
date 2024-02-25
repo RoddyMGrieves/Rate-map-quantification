@@ -65,7 +65,7 @@
     xbuff = 160;
     xvec = xnow : (xsiz+xbuff) : 1000;
     ysiz = 200;
-    ybuff = 100;
+    ybuff = 180;
     yvec = ynow : -(ysiz+ybuff) : 0;
     [xx,yy] = meshgrid(xvec,yvec);
     xx = xx';
@@ -75,7 +75,7 @@
     n_color_levels = 64;
     error_colormap = flipud(inferno(n_color_levels));    
     clims = [1*10^-12 1*10^-11]; 
-    % clims = 'auto';
+    clims = 'auto';
     interp_method = 'nearest';  
   
 
@@ -136,6 +136,10 @@
             set(gca,'ColorScale','log')
             caxis(clims) 
 
+            if mm==1
+                caxis([min(mat1(2:end,:),[],'all'),max(mat1(2:end,:),[],'all')]) 
+            end
+
             axis ij
             ax1.XScale = 'log';
             ax1.YScale = 'log';  
@@ -182,10 +186,10 @@
             if mm==5
                 [~,leg] = legendflex([pb100 pc00]...
                     ,{'Balanced solution','Minimum error solution'}...
-                    ,'anchor',{'s','s'},'ncol',1,'box','off','buffer',[-130,-110],'xscale',.5,'fontsize',9);  
+                    ,'anchor',{'s','s'},'ncol',1,'box','off','buffer',[0,-150],'xscale',.5,'fontsize',9);  
             end
 
-            if mm == 4 
+            % if mm == 4 
                 axc = axes('Units','pixels','Position',[ax1.Position(1)-0 ax1.Position(2)-90 ax1.Position(3) 10]); 
                     mat = linspace(ax1.CLim(1),ax1.CLim(2),100);
                     imagesc('YData',ones(size(mat)),'XData',mat,'CData',mat);
@@ -196,7 +200,7 @@
                     axc.XTickLabelRotation = 0; 
                     axc.XLim = ax1.CLim;
                     text(0.5,1.7,'Map error (MISE)','FontSize',8,'HorizontalAl','center','Units','normalized')                    
-            end
+            % end
 
             if strcmp(mname,'histogram')
                 ax1b = axes('Units','pixels','Position',[ax1.Position(1) ax1.Position(2)+ax1.Position(4)+6 ax1.Position(3) 15]);  

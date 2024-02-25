@@ -58,10 +58,10 @@
 
     % method settings
     xnow = 70;
-    ynow = 790;
+    ynow = 690;
     mnames = {'histogram','ash','kadaptive','ksde','fyhn','kyadaptive'};
     dnames = {'Histogram',sprintf('Averaged Shifted Histogram (ASH)'),'Adaptive Smoothing',sprintf('Kernel Smoothed Density Estimate (KSDE)'),'Temporal KSDE','Adaptive Binning'}; 
-    ls = {'a','b','c','d','e','f','g'};
+    ls = {'A','B','C','D','E','F','G'};
     mapidx = 4;
     xsiz = 180;
     xbuff = 220;
@@ -396,9 +396,9 @@
 %% ################################################################# %% Save the figure
     % Save the figure    
     disp(sprintf('\tSaving figure...'))    
-    figname = [fig_dir2 '\v2_fig_pareto_plots.png'];
+    figname = [fig_dir2 '\Fig 9.png'];
     [~,~,~] = mkdir(fig_dir2);    
-    exportgraphics(fig1,figname,'BackgroundColor','w','ContentType','image','Resolution',250);  
+    exportgraphics(fig1,figname,'BackgroundColor','w','ContentType','image','Resolution',350);  
     close(fig1)    
     
     

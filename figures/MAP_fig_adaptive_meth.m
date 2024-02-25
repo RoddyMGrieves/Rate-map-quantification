@@ -45,7 +45,8 @@
     mname = 'adaptive';
     fmap_colormap = 'turbo';
     other_colormap = 'hot';
-    
+    font_siz = 12;
+
 %% ##################################### Heading 2
 %% #################### Heading 3
 %% Heading 4
@@ -87,11 +88,11 @@
         daspect([1 1 1])
         axis xy off  
         text_offset = 1.07;
-        text(0,text_offset,'16 minute session','Units','normalized','FontSize',8,'HorizontalAl','left');
+        text(0,text_offset,'16 minute session','Units','normalized','FontSize',font_siz+2,'HorizontalAl','left');
 
         [~,leg] = legendflex([p1 s1]...
             ,{'positions','spikes'}...
-            ,'anchor',{'s','s'},'ncol',1,'box','off','buffer',[-30,-40],'xscale',1,'fontsize',9); 
+            ,'anchor',{'s','s'},'ncol',1,'box','off','buffer',[-30,-45],'xscale',1,'fontsize',font_siz); 
 
     % create ratemap
     rmset = mapset; % rate mapper settings structure - passing mapset directly to ratemapper causes a memory leak
@@ -118,7 +119,7 @@
         [Xq,Yq] = meshgrid(movmean(map_grid(:,1),2,'EndPoints','discard'),movmean(map_grid(:,2),2,'EndPoints','discard'));
         scatter(Xq,Yq,5,'b','filled','MarkerEdgeColor','none','MarkerFaceAlpha',0.5); hold on;
 
-        text(0,text_offset,sprintf('Position query points'),'Units','normalized','FontSize',8,'HorizontalAl','left')
+        text(0,text_offset,sprintf('Position query points'),'Units','normalized','FontSize',font_siz,'HorizontalAl','left')
         ax2.XLim = [min(map_grid(:,1)) max(map_grid(:,1))];
         ax2.YLim = [min(map_grid(:,2)) max(map_grid(:,2))];  
         
@@ -131,7 +132,7 @@
         daspect([1 1 1])
         axis xy off  
 
-        text(0,text_offset,sprintf('Example radii'),'Units','normalized','FontSize',8,'HorizontalAl','left')
+        text(0,text_offset,sprintf('Example radii'),'Units','normalized','FontSize',font_siz,'HorizontalAl','left')
         ax6.XLim = ax2.XLim;
         ax6.YLim = ax2.YLim;
 
@@ -151,7 +152,7 @@
         plot([Xq(exbin2) Xq(exbin2)+r2],[Yq(exbin2) Yq(exbin2)],'Color','k')        
         text(Xq(exbin2)+r2+1,Yq(exbin2),sprintf('%.f mm',rmset.radmap(exbin2)),'HorizontalAl','left','FontSize',8)
 
-        text(0.01,-0.15,sprintf('Expand until:\nradius {\\geq} %c / (n {\\times} {\\surd}s)',945),'HorizontalAl','left','FontSize',10,'Units','normalized')
+        text(0.01,-0.15,sprintf('Expand until:\nradius {\\geq} %c / (n {\\times} {\\surd}s)',945),'HorizontalAl','left','FontSize',font_siz,'Units','normalized')
 
     % distance map
     ax10 = axes('Units','pixels','Position',[ax6.Position(1)+ax6.Position(3)+vbuff+10 ax6.Position(2) ax6.Position(3) ax6.Position(4)]); 
@@ -163,7 +164,7 @@
         ax10.XLim = ax2.XLim;
         ax10.YLim = ax2.YLim;
         ax10.CLim(1) = 0;
-        text(0,text_offset,sprintf('All radii (mm)'),'Units','normalized','FontSize',8,'HorizontalAl','left')
+        text(0,text_offset,sprintf('All radii (mm)'),'Units','normalized','FontSize',font_siz,'HorizontalAl','left')
         colormap(ax10,other_colormap)
         
         axc = axes('Units','pixels','Position',[ax10.Position(1)+ax10.Position(3)+10 ax10.Position(2)+0 12 ax10.Position(4)*0.9]); 
@@ -186,7 +187,7 @@
         ax12.XLim = ax2.XLim;
         ax12.YLim = ax2.YLim;     
         ax12.CLim(1) = 0;        
-        text(0,text_offset,sprintf('Firing rate map'),'Units','normalized','FontSize',8,'HorizontalAl','left')
+        text(0,text_offset,sprintf('Firing rate map'),'Units','normalized','FontSize',font_siz+2,'HorizontalAl','left')
         colormap(ax12,fmap_colormap)
     
         axc = axes('Units','pixels','Position',[ax12.Position(1)+ax12.Position(3)+10 ax12.Position(2)+0 12 ax12.Position(4)*0.9]); 
@@ -205,24 +206,26 @@
         annotation('line',[0.09 0.10],[0.73 0.73],'LineWidth',lwid) % to position/spike plot
         
         pos_y = 0.510;
-        annotation('line',[0.09 0.09],[0.73 pos_y],'LineWidth',lwid) % left side
-        annotation('arrow',[0.09 0.11],[pos_y pos_y],'LineWidth',lwid) % to pos query points 
-        annotation('arrow',[0.188 0.225],[pos_y pos_y],'LineWidth',lwid) % pos query points to example radii
-        annotation('arrow',[0.277 0.345],[pos_y pos_y],'LineWidth',lwid) % example radii to all radii
-        annotation('line',[0.40 0.51],[pos_y pos_y],'LineWidth',lwid) % all radii to side  
+        pos_y = 0.525;        
+        annotation('arrow',[0.09 0.09],[0.73 pos_y],'LineWidth',lwid) % left side
+        % annotation('arrow',[0.09 0.11],[pos_y pos_y],'LineWidth',lwid) % to pos query points 
+        % annotation('arrow',[0.213 0.225],[pos_y pos_y],'LineWidth',lwid) % pos query points to example radii
+        % annotation('arrow',[0.292 0.345],[pos_y pos_y],'LineWidth',lwid) % example radii to all radii
+        % annotation('line',[0.419 0.51],[pos_y pos_y],'LineWidth',lwid) % all radii to side  
+        annotation('arrow',[0.09 0.51],[pos_y pos_y],'LineWidth',lwid) % to pos query points         
         annotation('line',[0.51 0.51],[pos_y 0.73],'LineWidth',lwid) % right side                
         annotation('arrow',[0.51 0.48],[0.73 0.73],'LineWidth',lwid) % right side to ratemap
 
 %         delete(an2)
-        an2 = annotation('textbox','String',sprintf('For each query point:\nrate = s / n \\times sample interval'),'Position',[0.41 0.54 0.20 0.05],'EdgeColor','none','BackgroundColor','w','HorizontalAl','center');         
+        an2 = annotation('textbox','String',sprintf('For each query point:\nrate = s / n \\times sample interval'),'Position',[0.41 0.545 0.20 0.06],'EdgeColor','none','BackgroundColor','w','HorizontalAl','center','FontSize',font_siz);         
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% ################################################################# %% Save the figure
     % Save the figure    
     disp(sprintf('\tSaving figure...'))    
-    figname = [fig_dir2 '\' mname '_fig_meth.png'];
+    figname = [fig_dir2 '\Fig 3.png'];
     [~,~,~] = mkdir(fig_dir2);    
-    exportgraphics(gcf,figname,'BackgroundColor','w','ContentType','image','Resolution',250);  
+    exportgraphics(gcf,figname,'BackgroundColor','w','ContentType','image','Resolution',350);  
     close(gcf)        
     
     

@@ -45,6 +45,7 @@
     mname = 'kadaptive';
     fmap_colormap = 'turbo';
     other_colormap = 'hot';
+    font_siz = 12;
     
 %% ##################################### Heading 2
 %% #################### Heading 3
@@ -87,11 +88,11 @@
         daspect([1 1 1])
         axis xy off  
         text_offset = 1.07;
-        text(0,text_offset,'16 minute session','Units','normalized','FontSize',8,'HorizontalAl','left');
+        text(0,text_offset,'16 minute session','Units','normalized','FontSize',font_siz+2,'HorizontalAl','left');
 
         [~,leg] = legendflex([p1 s1]...
             ,{'positions','spikes'}...
-            ,'anchor',{'s','s'},'ncol',1,'box','off','buffer',[-30,-40],'xscale',1,'fontsize',9); 
+            ,'anchor',{'s','s'},'ncol',1,'box','off','buffer',[-30,-45],'xscale',1,'fontsize',font_siz); 
 
     % create ratemap
     rmset = mapset; % rate mapper settings structure - passing mapset directly to ratemapper causes a memory leak
@@ -112,7 +113,7 @@
         axis xy off  
         ax2.XLim = [min(map_grid(:,1)) max(map_grid(:,1))];
         ax2.YLim = [min(map_grid(:,2)) max(map_grid(:,2))];        
-        text(0,text_offset,sprintf('Position data'),'Units','normalized','FontSize',8,'HorizontalAl','left')
+        text(0,text_offset,sprintf('Position data'),'Units','normalized','FontSize',font_siz,'HorizontalAl','left')
     
     % spikes
     ax3 = axes('Units','pixels','Position',[ax2.Position(1) ax2.Position(2)-200 ax2.Position(3) ax2.Position(4)]);   
@@ -123,7 +124,7 @@
         axis xy off 
         ax3.XLim = [min(map_grid(:,1)) max(map_grid(:,1))];
         ax3.YLim = [min(map_grid(:,2)) max(map_grid(:,2))];         
-        text(0,text_offset,sprintf('Spikes'),'Units','normalized','FontSize',8,'HorizontalAl','left')
+        text(0,text_offset,sprintf('Spikes'),'Units','normalized','FontSize',font_siz,'HorizontalAl','left')
     
     vbuff = 10;
     % raw dwellmap
@@ -144,7 +145,7 @@
         ax6.XLim = ax2.XLim;
         ax6.YLim = ax2.YLim;
         ax6.CLim(1) = 0;                        
-        text(0,text_offset,sprintf('Dwell map'),'Units','normalized','FontSize',8,'HorizontalAl','left')
+        text(0,text_offset,sprintf('Dwell map'),'Units','normalized','FontSize',font_siz,'HorizontalAl','left')
         colormap(ax6,other_colormap)
         
     % raw spikemap
@@ -164,7 +165,7 @@
         ax7.XLim = ax2.XLim;
         ax7.YLim = ax2.YLim;
         ax7.CLim(1) = 0;                        
-        text(0,text_offset,sprintf('Spike map'),'Units','normalized','FontSize',8,'HorizontalAl','left')
+        text(0,text_offset,sprintf('Spike map'),'Units','normalized','FontSize',font_siz,'HorizontalAl','left')
         colormap(ax7,other_colormap)
         
     % dwellmap convolution
@@ -185,7 +186,7 @@
 
         nbuff = 300;
         arrow([-950 160+nbuff -100],[-2390 -1360+nbuff -490])
-        text(-1690-nbuff*1,-560+nbuff*1,-290,sprintf('kernel radius_{i}'),'FontSize',8,'Rotation',45,'HorizontalAl','center')
+        text(-1690-nbuff*1,-560+nbuff*1,-290,sprintf('kernel radius_{i}'),'FontSize',10,'Rotation',45,'HorizontalAl','center')
         
     % spikemap convolution
     ax9 = axes('Units','pixels','Position',[ax7.Position(1)+ax7.Position(3)+15 ax7.Position(2)-(ax7.Position(4)*0.4)+40 200 200],'Color','none');           
@@ -204,9 +205,9 @@
     
         nbuff = 300;
         arrow([-950 160+nbuff -100],[-2390 -1360+nbuff -490])
-        text(-1690-nbuff*1,-560+nbuff*1,-290,sprintf('kernel radius_{i}'),'FontSize',8,'Rotation',45,'HorizontalAl','center')
+        text(-1690-nbuff*1,-560+nbuff*1,-290,sprintf('kernel radius_{i}'),'FontSize',10,'Rotation',45,'HorizontalAl','center')
         
-        text(0.2,-0.05,sprintf('Find radius_{i} {\\geq} %c / (n_{i} {\\times} {\\surd}s_{i})',945),'HorizontalAl','left','FontSize',10,'Units','normalized')
+        text(0.2,-0.05,sprintf('Find radius_{i} {\\geq} %c / (n_{i} {\\times} {\\surd}s_{i})',945),'HorizontalAl','left','FontSize',font_siz,'Units','normalized')
         
     % distance map
     ax10 = axes('Units','pixels','Position',[ax9.Position(1)+ax9.Position(3)+vbuff+70 ax7.Position(2)+(ax7.Position(3)/2)+20 ax2.Position(3) ax2.Position(4)]); 
@@ -226,7 +227,7 @@
         ax10.XLim = ax2.XLim;
         ax10.YLim = ax2.YLim;
         ax10.CLim(1) = 0;
-        text(0,text_offset,sprintf('All radii (mm)'),'Units','normalized','FontSize',8,'HorizontalAl','left')
+        text(0,text_offset,sprintf('All radii (mm)'),'Units','normalized','FontSize',font_siz,'HorizontalAl','left')
         colormap(ax10,other_colormap)
         
         axc = axes('Units','pixels','Position',[ax10.Position(1)+ax10.Position(3)+10 ax10.Position(2)+0 12 ax10.Position(4)*0.9]); 
@@ -249,7 +250,7 @@
         ax12.XLim = ax2.XLim;
         ax12.YLim = ax2.YLim;    
         ax12.CLim(1) = 0;                
-        text(0,text_offset,sprintf('Firing rate map'),'Units','normalized','FontSize',8,'HorizontalAl','left')
+        text(0,text_offset,sprintf('Firing rate map'),'Units','normalized','FontSize',font_siz+2,'HorizontalAl','left')
         colormap(ax12,fmap_colormap)
     
         axc = axes('Units','pixels','Position',[ax12.Position(1)+ax12.Position(3)+10 ax12.Position(2)+0 12 ax12.Position(4)*0.9]); 
@@ -267,38 +268,41 @@
         lwid = 1.3;
         annotation('line',[0.03 0.10],[0.73 0.73],'LineWidth',lwid) % to position/spike plot
         
-        spike_y = 0.260;        
-        an0 = annotation('line',[0.03 0.03],[0.73 spike_y],'LineWidth',lwid); % down side
-        an1 = annotation('arrow',[0.03 0.047],[spike_y spike_y],'LineWidth',lwid); % to spike data 
-        an2 = annotation('arrow',[0.075 0.154],[spike_y spike_y],'LineWidth',lwid); % spike data to spike map
-        an3 = annotation('line',[0.196 0.27],[spike_y spike_y],'LineWidth',lwid); % spike map to spike convolutions
+        spike_y = 0.280;        
+        an0 = annotation('arrow',[0.03 0.03],[0.73 pos_y],'LineWidth',lwid); % down side
+        an1 = annotation('arrow',[0.03 0.27],[spike_y spike_y],'LineWidth',lwid); % to spike data         
+        % an1 = annotation('arrow',[0.03 0.047],[spike_y spike_y],'LineWidth',lwid); % to spike data 
+        % an2 = annotation('arrow',[0.075 0.154],[spike_y spike_y],'LineWidth',lwid); % spike data to spike map
+        % an3 = annotation('line',[0.196 0.27],[spike_y spike_y],'LineWidth',lwid); % spike map to spike convolutions
 
-        pos_y = 0.510;
-        an8 = annotation('arrow',[0.03 0.047],[pos_y pos_y],'LineWidth',lwid); % to pos data 
-        an9 = annotation('arrow',[0.097 0.154],[pos_y pos_y],'LineWidth',lwid); % pos data to dwell map
-        an10 = annotation('line',[0.196 0.27],[pos_y pos_y],'LineWidth',lwid); % dwell map to convolutions
+        pos_y = 0.530;
+        an0 = annotation('arrow',[0.03 0.03],[pos_y spike_y],'LineWidth',lwid); % down side 
+        an8 = annotation('arrow',[0.03 0.27],[pos_y pos_y],'LineWidth',lwid); % to pos data         
+        % an8 = annotation('arrow',[0.03 0.047],[pos_y pos_y],'LineWidth',lwid); % to pos data 
+        % an9 = annotation('arrow',[0.097 0.154],[pos_y pos_y],'LineWidth',lwid); % pos data to dwell map
+        % an10 = annotation('line',[0.196 0.27],[pos_y pos_y],'LineWidth',lwid); % dwell map to convolutions
         
         fun_y = 0.045;
         an11 = annotation('line',[0.27 0.27],[pos_y fun_y],'LineWidth',lwid); % dwell map down
         an12 = annotation('arrow',[0.27 0.292],[fun_y fun_y],'LineWidth',lwid); % to adaptive equation
-        an13 = annotation('line',[0.415 0.436],[fun_y fun_y],'LineWidth',lwid); % away from adaptive equation
-        an14 = annotation('line',[0.436 0.436],[fun_y 0.285],'LineWidth',lwid); % convolutions up
+        % an13 = annotation('line',[0.419 0.436],[fun_y fun_y],'LineWidth',lwid); % away from adaptive equation
+        an14 = annotation('line',[0.436 0.436],[fun_y+0.015 0.285],'LineWidth',lwid); % convolutions up
         an15 = annotation('arrow',[0.436 0.457],[0.285 0.285],'LineWidth',lwid); % away from adaptive equation
         
-        an16 = annotation('line',[0.52 0.52],[0.375 0.73],'LineWidth',lwid); % distance map up
+        an16 = annotation('line',[0.52 0.52],[0.382 0.73],'LineWidth',lwid); % distance map up
         an17 = annotation('arrow',[0.52 0.48],[0.73 0.73],'LineWidth',lwid); % left to ratemap
         annotation('textbox','String',sprintf('For every bin:\nrate = s / n'),'Position',[0.465 0.455 0.1 0.05],'EdgeColor','none','BackgroundColor','w','HorizontalAl','center')         
         
 %         delete(an2)
-        an2 = annotation('textbox','String',sprintf('For every bin:\nrate = s / n \\times sample interval'),'Position',[0.420 0.455 0.20 0.05],'EdgeColor','none','BackgroundColor','w','HorizontalAl','center');       
+        an2 = annotation('textbox','String',sprintf('For every bin:\nrate = s / n \\times sample interval'),'Position',[0.420 0.455 0.20 0.07],'EdgeColor','none','BackgroundColor','w','HorizontalAl','center','FontSize',font_siz);       
   % keyboard
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% ################################################################# %% Save the figure
     % Save the figure    
     disp(sprintf('\tSaving figure...'))    
-    figname = [fig_dir2 '\' mname '_fig_meth.png'];
+    figname = [fig_dir2 '\Fig 4.png'];
     [~,~,~] = mkdir(fig_dir2);    
-    exportgraphics(gcf,figname,'BackgroundColor','w','ContentType','image','Resolution',250);  
+    exportgraphics(gcf,figname,'BackgroundColor','w','ContentType','image','Resolution',350);  
     close(gcf)      
     
     

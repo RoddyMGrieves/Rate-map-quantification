@@ -170,14 +170,22 @@
             save(fname,'maps_for_plotting');
         end
 
-        axc = axes('Units','pixels','Position',[ax.Position(1)+120 ax.Position(2)+300 10 120]);
-            x = 1:100;
-            imagesc(x');
-            colormap(gca,'turbo')  
-            axis xy off
-            text(0.5,-0.1,'0 Hz','Units','normalized','FontSize',9,'HorizontalAl','center');
-            text(0.5,1.1,'Max','Units','normalized','FontSize',9,'HorizontalAl','center');
-            
+        axc = axes('Units','pixels','Position',[ax.Position(1)+120 ax.Position(2)+200 12 ax.Position(4)*2]); 
+            mat = linspace(0,100,100)';
+            imagesc(ones(size(mat)),mat,mat);
+            colormap(axc,ax.Colormap);
+            axis xy
+
+            axc.YTick = [0 100];
+            axc.YTickLabel = {'0 Hz','Max'};
+            axc.XTick = [];
+            axc.YAxisLocation = 'right';
+            text(0,1.15,sprintf('Firing\nrate (Hz)'),'FontSize',8,'HorizontalAl','left','Units','normalized')
+            % add univisted box
+            axc2 = axes('Units','pixels','Position',[axc.Position(1) axc.Position(2)-20 axc.Position(3) 10]); 
+            axis on; box on; axc2.XTick = []; axc2.YTick = 0.5; axc2.YTickLabel = {'Unvisited'}; axc2.YAxisLocation = 'right';
+
+
         ax1 = axes('Units','pixels','Position',[ax.Position(1)-psiz*3.6 ax.Position(2)-110 psiz*2+10 80]);
             v1 = mean([maps_for_plotting{1,:,2}],'omitnan');
             v2 = mean([maps_for_plotting{2,:,2}],'omitnan');         
@@ -209,9 +217,9 @@
 %% ################################################################# %% Save the figure
     % Save the figure    
     disp(sprintf('\tSaving figure...'))    
-    figname = [fig_dir2 '\' mname '_fig_compare.png'];
+    figname = [fig_dir2 '\S2_Fig.png'];
     [~,~,~] = mkdir(fig_dir2);    
-    exportgraphics(gcf,figname,'BackgroundColor','w','ContentType','image','Resolution',250);  
+    exportgraphics(gcf,figname,'BackgroundColor','w','ContentType','image','Resolution',350);  
     close(gcf)      
     
     
